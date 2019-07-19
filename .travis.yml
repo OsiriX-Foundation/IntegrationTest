@@ -13,7 +13,9 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 # command to install dependencies
 install:
+  - python3 --version
   - pip3 install -r requirements.txt
+  - pip3 list
 # command to run tests
 script:
   - chmod +x script_run_docker.sh
