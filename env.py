@@ -1,5 +1,5 @@
 
-_URL="http://localhost:7575/api"
+_URL="http://localhost:8042/api"
 _USER_1_TOKEN = "eyJhbGciOiJIUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJhdXRob3JpemF0aW9uLmtoZW9wcy5vbmxpbmUiLCJzdWIiOiJjMmZkMGI2Ni1kYWM0LTRiOTgtOTM0MS1kNGYzYjMwM2JkNGUiLCJlbWFpbCI6InRpdGlAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MjUyMjk0MzU3MiwiaXNzIjoiYXV0aG9yaXphdGlvbi5raGVvcHMub25saW5lIiwiaWF0IjoxNTIyOTM5OTcyfQ.hrau4sW3iVf_mS0gLiO_uulMrNUTe_D9FRKfK6AtK48"
 
 
