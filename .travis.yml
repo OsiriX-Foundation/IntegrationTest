@@ -16,5 +16,6 @@ install:
   - pip3 install -r requirements.txt
 # command to run tests
 script:
+  - chmod +x script_run_docker.sh
   - ./script_run_docker.sh
   - pytest -s -v -x
