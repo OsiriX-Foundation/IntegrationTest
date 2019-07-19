@@ -24,12 +24,12 @@ def test():
     print("\t- new album")
     request_url = env.URL + "/albums"
     headers = {"Authorization": "Bearer "+ env.USER_1_TOKEN, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
-    print(headers)
     name = "the album name"
     description = "the album description"
     data = {"sendSeries":"false", "name":name, "description": description}
     response = requests.post(request_url, headers=headers, data=util.urlencode(data))
     util.print_request("POST", response, request_url)
+    print(response.content)
     album=json.loads(response.content)
     assert response.status_code == 201
     assert album["name"] == name
