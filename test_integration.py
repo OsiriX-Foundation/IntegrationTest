@@ -13,15 +13,9 @@ import util
 STUDY_UID = "2.16.840.1.113669.632.20.1211.10000314223"
 SERIES_UID = "1.3.12.2.1107.5.1.4.48545.30000006100307470634300004693"
 
-
-def test():
+def test_new_album():
     env.initialize()
     print()
-    #### Album
-    print("#Albums")
-
-    # New Album
-    print("\t- new album")
     request_url = env.URL + "/albums"
     headers = {"Authorization": "Bearer "+ env.USER_1_TOKEN, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
     name = "the album name"
@@ -29,7 +23,6 @@ def test():
     data = {"sendSeries":"false", "name":name, "description": description}
     response = requests.post(request_url, headers=headers, data=util.urlencode(data))
     util.print_request("POST", response, request_url)
-    print(response.content)
     album=json.loads(response.content)
     assert response.status_code == 201
     assert album["name"] == name
@@ -49,11 +42,17 @@ def test():
     assert album["number_of_studies"] == 0
     assert album["modalities"] == []
 
+def test_stow():
+    env.initialize()
+    print()
     # STOW
     util.stow(token = env.USER_1_TOKEN)
 
+
+def test_get_studies_list_from_inbox():
+    env.initialize()
+    print()
     # get studies list from inbox
-    print("\t- get studies list from inbox")
     request_url = env.URL + "/studies"
     headers = {"Authorization": "Bearer "+ env.USER_1_TOKEN}
     params = {"inbox": "True"}
