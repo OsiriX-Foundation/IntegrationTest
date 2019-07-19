@@ -17,7 +17,7 @@ def test_new_album():
     name = "the album name"
     description = "the album description"
     data = {"sendSeries":"false", "name":name, "description": description}
-    album=util.new_album(token=env.USER_1_TOKEN, data=data)
+    album = util.new_album(token=env.USER_1_TOKEN, data=data)
     assert album["name"] == name
     assert album["description"] == description
     assert album["send_series"] == False
