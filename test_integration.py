@@ -23,8 +23,8 @@ def test_new_album():
     data = {"sendSeries":"false", "name":name, "description": description}
     response = requests.post(request_url, headers=headers, data=util.urlencode(data))
     util.print_request("POST", response, request_url)
-    album=json.loads(response.content)
     assert response.status_code == 201
+    album=json.loads(response.content)
     assert album["name"] == name
     assert album["description"] == description
     assert album["send_series"] == False
@@ -58,5 +58,5 @@ def test_get_studies_list_from_inbox():
     params = {"inbox": "True"}
     response = requests.get(request_url, headers=headers, params=params)
     util.print_request("GET", response, request_url)
-    #assert response.status_code == 200
+    assert response.status_code == 200
     assert response.headers.get("X-Total-Count") == "1"
