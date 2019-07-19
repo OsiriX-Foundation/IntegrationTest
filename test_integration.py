@@ -14,17 +14,10 @@ STUDY_UID = "2.16.840.1.113669.632.20.1211.10000314223"
 SERIES_UID = "1.3.12.2.1107.5.1.4.48545.30000006100307470634300004693"
 
 def test_new_album():
-    env.initialize()
-    print()
-    request_url = env.URL + "/albums"
-    headers = {"Authorization": "Bearer "+ env.USER_1_TOKEN, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
     name = "the album name"
     description = "the album description"
     data = {"sendSeries":"false", "name":name, "description": description}
-    response = requests.post(request_url, headers=headers, data=util.urlencode(data))
-    util.print_request("POST", response, request_url)
-    assert response.status_code == 201
-    album=json.loads(response.content)
+    album=util.new_album(token=env.USER_1_TOKEN, data=data)
     assert album["name"] == name
     assert album["description"] == description
     assert album["send_series"] == False
@@ -46,7 +39,7 @@ def test_stow():
     env.initialize()
     print()
     # STOW
-    util.stow(token = env.USER_1_TOKEN)
+    util.stow(token=env.USER_1_TOKEN)
 
 
 def test_get_studies_list_from_inbox():

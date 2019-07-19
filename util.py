@@ -25,3 +25,14 @@ def stow(token, status_code = 200, file_name = "testStudy.dcm", params = {}):
     response = requests.post(request_url, headers=headers, files=files, params=params)
     print_request("POST", response, request_url)
     assert response.status_code == status_code
+
+def new_album(token, data={ "name":"a name"}):
+    env.initialize()
+    print()
+    request_url = env.URL + "/albums"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.post(request_url, headers=headers, data=util.urlencode(data))
+    util.print_request("POST", response, request_url)
+    assert response.status_code == 201
+    album=json.loads(response.content)
+    return album
