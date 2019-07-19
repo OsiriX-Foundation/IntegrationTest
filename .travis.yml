@@ -22,3 +22,4 @@ script:
   - ./script_run_docker.sh
   - pytest -s -v
   - curl localhost:8042/api/albums
+  - docker logs kheopsauthorization
