@@ -11,15 +11,14 @@ import env
 
 
 def print_request(methode, response, url):
-    print("\t\t" + methode + " " + url + " ["+ str(response.status_code) + " " + requests.status_codes._codes[response.status_code][0].upper() + ", " + str(int(response.elapsed.total_seconds()*1000))+"ms]")
+    print("\t" + methode + " " + url + " ["+ str(response.status_code) + " " + requests.status_codes._codes[response.status_code][0].upper() + ", " + str(int(response.elapsed.total_seconds()*1000))+"ms]")
 
 def urlencode(data):
     return urllib.parse.urlencode(data)
 
 
-def stow(token, status_code = 200, file_name = "testStudy.dcm", params = {}, message = "STOW RS"):
+def stow(token, status_code = 200, file_name = "testStudy.dcm", params = {}):
     env.initialize()
-    print("\t- " + message)
     request_url = env.URL + "/studies"
     headers = {"Authorization": "Bearer "+ token, "Content-Type": "multipart/related; type=\"application/dicom\"; boundary=myboundary"}
     files = {'file': open(file_name, 'rb')}
