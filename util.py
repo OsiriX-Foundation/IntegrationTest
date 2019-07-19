@@ -19,6 +19,7 @@ def urlencode(data):
 
 def stow(token, status_code = 200, file_name = "testStudy.dcm", params = {}):
     env.initialize()
+    print()
     request_url = env.URL + "/studies"
     headers = {"Authorization": "Bearer "+ token, "Content-Type": "multipart/related; type=\"application/dicom\"; boundary=myboundary"}
     files = {'file': open(file_name, 'rb')}
@@ -34,5 +35,17 @@ def new_album(token, data={ "name":"a name"}):
     response = requests.post(request_url, headers=headers, data=util.urlencode(data))
     util.print_request("POST", response, request_url)
     assert response.status_code == 201
-    album=json.loads(response.content)
+    album = json.loads(response.content)
     return album
+
+def studies_list(token, params={}, count=1):
+    env.initialize()
+    print()
+    request_url = env.URL + "/studies"
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.get(request_url, headers=headers, params=params)
+    util.print_request("GET", response, request_url)
+    assert response.status_code == 200
+    assert response.headers.get("X-Total-Count") == str(count)
+    studiesList = json.loads(response.content)
+    return studiesList
