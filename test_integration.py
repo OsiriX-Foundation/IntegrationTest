@@ -24,6 +24,7 @@ def test():
     print("\t- new album")
     request_url = env.URL + "/albums"
     headers = {"Authorization": "Bearer "+ env.USER_1_TOKEN, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
+    print(headers)
     name = "the album name"
     description = "the album description"
     data = {"sendSeries":"false", "name":name, "description": description}
