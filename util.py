@@ -12,9 +12,15 @@ import env
 
 def print_request(methode, response, url):
     print("\t" + methode + " " + url + " ["+ str(response.status_code) + " " + requests.status_codes._codes[response.status_code][0].upper() + ", " + str(int(response.elapsed.total_seconds()*1000))+"ms]")
+    print_info(response.content)
 
 def urlencode(data):
     return urllib.parse.urlencode(data)
+
+def print_info(info):
+    env.initialize()
+    if env.PRINT_INFO:
+        print(info)
 
 
 def stow(token, status_code = 200, file_name = "testStudy.dcm", params = {}):
