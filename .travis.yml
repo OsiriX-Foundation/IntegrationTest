@@ -18,4 +18,4 @@ install:
 script:
   - chmod +x script_run_docker.sh
   - ./script_run_docker.sh
-  - pytest-3 -s -v
+  - pytest -s -v
