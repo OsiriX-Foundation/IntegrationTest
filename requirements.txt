@@ -8,8 +8,8 @@ pip==9.0.1
 PyJWT==1.5.3
 pyserial==3.4
 pytest==3.3.2
-requests==2.18.4
+requests==2.20
 requests-unixsocket==0.1.5
 service-identity==16.0.0
 setuptools==39.0.1
-urllib3==1.22
+urllib3==1.24.2
