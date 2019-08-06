@@ -1,23 +1,35 @@
 import os
 import requests
-import numpy
 from requests.auth import AuthBase
 import json
 import urllib
-from threading import Thread
 import time
 import pytest
 import env
 import util
 
 
-def test_new_album():
+def test_init():
     env.initialize()
+    print()
+
+def test_get_token():
+    #env.initialize()
+    print()
+    token = util.get_token(username="titi", password="titi")
+    env.env_var["USER_1_TOKEN"] = token
+    token = util.get_token(username="toto", password="toto")
+    env.env_var["USER_2_TOKEN"] = token
+    token = util.get_token(username="tata", password="tata")
+    env.env_var["USER_3_TOKEN"] = token
+
+
+def test_new_album():
     print()
     name = "the album name"
     description = "the album description"
     data = {"sendSeries":"false", "name":name, "description": description}
-    album = util.new_album(token=env.USER_1_TOKEN, data=data)
+    album = util.new_album(token=env.env_var.get("USER_1_TOKEN"), data=data)
     assert album["name"] == name
     assert album["description"] == description
     assert album["send_series"] == False
@@ -36,10 +48,8 @@ def test_new_album():
     assert album["modalities"] == []
 
 def test_stow():
-    env.initialize()
-    util.stow(token=env.USER_1_TOKEN)
+    util.stow(token=env.env_var.get("USER_1_TOKEN"))
 
 def test_get_studies_list_from_inbox():
-    env.initialize()
     params = {"inbox": "True"}
-    util.studies_list(token=env.USER_1_TOKEN,params=params, count=1)
+    util.studies_list(token=env.env_var.get("USER_1_TOKEN"),params=params, count=1)
