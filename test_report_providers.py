@@ -24,11 +24,12 @@ def test_album_studies_list():
 def test_get_report_provider_list_empty():
     util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), count=0)
 
-def test_add_report_provider():
+def test_add_report_provider_1():
     name = "report provider name"
     url = "https://reportprovider.kheops.online/.well-known/kheops-report-configuration"
     data = {"name": name, "url": url}
-    util.new_report_provider(token=env.env_var.get("USER_1_TOKEN"), data=data, album_id=env.env_var.get("ALBUM_ID"))
+    rp = util.new_report_provider(token=env.env_var.get("USER_1_TOKEN"), data=data, album_id=env.env_var.get("ALBUM_ID"))
+    env.env_var["REPORT_PROVIDER_1"]=rp["client_id"]
 
 def test_add_report_provider_400():
     name = "name"
@@ -36,5 +37,77 @@ def test_add_report_provider_400():
     data = {"name": name, "url": url}
     util.new_report_provider(token=env.env_var.get("USER_1_TOKEN"), data=data, album_id=env.env_var.get("ALBUM_ID"), status_code=400)
 
-def test_get_report_provider_list():
-    rp = util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"))
+def test_get_report_provider_list_1():
+    util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"))
+
+def test_add_report_provider_2():
+    name = "report provider name"
+    url = "https://reportprovider.kheops.online/.well-known/kheops-report-configuration"
+    data = {"name": name, "url": url}
+    rp = util.new_report_provider(token=env.env_var.get("USER_1_TOKEN"), data=data, album_id=env.env_var.get("ALBUM_ID"))
+    env.env_var["REPORT_PROVIDER_2"]=rp["client_id"]
+
+def test_get_report_provider_list_2():
+    util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), count=2)
+
+def test_add_report_provider_3():
+    name = "report provider name"
+    url = "https://reportprovider.kheops.online/.well-known/kheops-report-configuration"
+    data = {"name": name, "url": url}
+    rp = util.new_report_provider(token=env.env_var.get("USER_1_TOKEN"), data=data, album_id=env.env_var.get("ALBUM_ID"))
+    env.env_var["REPORT_PROVIDER_3"]=rp["client_id"]
+
+def test_get_report_provider_list_3():
+    util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), count=3)
+
+def test_get_report_provider_1():
+    util.get_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_1"))
+
+def test_get_report_provider_2():
+    util.get_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_2"))
+
+def test_get_report_provider_3():
+    util.get_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_3"))
+
+def test_get_report_provider_404_album():
+    util.get_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID").lower(), client_id=env.env_var.get("REPORT_PROVIDER_3"), status_code=404)
+
+def test_get_report_provider_404_client_id():
+    util.get_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_3").lower(), status_code=404)
+
+def test_delete_report_provider_1():
+    util.delete_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_1"))
+
+def test_get_report_provider_list_2_():
+    util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), count=2)
+
+def test_delete_report_provider_2():
+    util.delete_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_2"))
+
+def test_get_report_provider_list_1_():
+    util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"))
+
+def test_delete_report_provider_404_album():
+    util.delete_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID").lower(), client_id=env.env_var.get("REPORT_PROVIDER_3"), status_code=404)
+
+def test_delete_report_provider_404_client_id():
+    util.delete_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_3").lower(), status_code=404)
+
+def test_edit_report_provider_name():
+    name = "new name"
+    data = {"name": name}
+    rp = util.edit_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), client_id=env.env_var.get("REPORT_PROVIDER_3"), data=data)
+    assert rp["name"] == name
+
+def test_edit_report_provider_name_404_album():
+    name = "new name"
+    data = {"name": name}
+    util.edit_report_provider(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID").lower(), client_id=env.env_var.get("REPORT_PROVIDER_2"), data=data, status_code=404)
+
+def test_metadata_report_provider_valid():
+    metadata = util.test_report_provider_uri(token=env.env_var.get("USER_1_TOKEN"), url="https://reportprovider.kheops.online/.well-known/kheops-report-configuration")
+    assert metadata["valid"] == True
+
+def test_metadata_report_provider_unvalid():
+    metadata = util.test_report_provider_uri(token=env.env_var.get("USER_1_TOKEN"), url="https://reportprovider.kheops.online/.well-known/")
+    assert metadata["valid"] == False

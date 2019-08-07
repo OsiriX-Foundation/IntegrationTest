@@ -83,6 +83,28 @@ def new_report_provider(token, data, album_id, status_code=201):
         reportprovider = json.loads(response.content)
         return reportprovider
 
+def test_report_provider_uri(token, url):
+    print()
+    request_url = env.env_var.get("URL") + "/reportproviders/metadata"
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    data = {"url": url}
+    response = requests.post(request_url, headers=headers, data=urlencode(data))
+    print_request("POST", response, request_url)
+    assert response.status_code == 200
+    metadata = json.loads(response.content)
+    return metadata
+
+def get_report_provider(token, client_id, album_id, status_code=200):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + str(album_id) + "/reportproviders/" + str(client_id)
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.get(request_url, headers=headers)
+    print_request("GET", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 200:
+        reportprovider = json.loads(response.content)
+        return reportprovider
+
 def report_provider_list(token, album_id, params={}, count=1):
     print()
     request_url = env.env_var.get("URL") + "/albums/"+str(album_id)+"/reportproviders"
@@ -93,3 +115,22 @@ def report_provider_list(token, album_id, params={}, count=1):
     assert response.headers.get("X-Total-Count") == str(count)
     report_providers = json.loads(response.content)
     return report_providers
+
+def edit_report_provider(token, client_id, album_id, data, status_code=200):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + str(album_id) + "/reportproviders/" + str(client_id)
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.patch(request_url, headers=headers, data=urlencode(data))
+    print_request("PATCH", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 200:
+        reportprovider = json.loads(response.content)
+        return reportprovider
+
+def delete_report_provider(token, client_id, album_id, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + str(album_id) + "/reportproviders/" + str(client_id)
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.delete(request_url, headers=headers)
+    print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
