@@ -31,17 +31,6 @@ def stow(token, status_code = 200, file_name = "testStudy.dcm", params = {}):
     print_request("POST", response, request_url)
     assert response.status_code == status_code
 
-def new_album(token, data={"name":"a name"}, status_code=201):
-    print()
-    request_url = env.env_var.get("URL") + "/albums"
-    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
-    response = requests.post(request_url, headers=headers, data=urlencode(data))
-    print_request("POST", response, request_url)
-    assert response.status_code == status_code
-    if status_code == 201:
-        album = json.loads(response.content)
-        return album
-
 def studies_list(token, params={}, count=1):
     print()
     request_url = env.env_var.get("URL") + "/studies"
@@ -67,6 +56,42 @@ def get_token(username, password, realm="travis", client_id="loginConnect"):
     response = requests.post(token_endpoint, headers=headers, data=data)
     token_response = json.loads(response.content)
     return token_response["access_token"]
+
+################################################################
+# ALBUMS
+################################################################
+
+def new_album(token, data={"name":"a name"}, status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/albums"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.post(request_url, headers=headers, data=urlencode(data))
+    print_request("POST", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 201:
+        album = json.loads(response.content)
+        return album
+
+def list_albums(token, status_code=200, params={}, count=1):
+    print()
+    request_url = env.env_var.get("URL") + "/albums"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
+    response = requests.get(request_url, headers=headers, params=params)
+    print_request("GET", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 200:
+        #assert response.headers.get("X-Total-Count") == str(count)
+        albums = json.loads(response.content)
+        return albums
+
+def delete_album(token, album_id, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.delete(request_url, headers=headers)
+    print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
+
 
 ################################################################
 # REPORT PROVIDER

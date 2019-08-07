@@ -45,7 +45,7 @@ def test_add_report_provider_2():
     url = "https://reportprovider.kheops.online/.well-known/kheops-report-configuration"
     data = {"name": name, "url": url}
     rp = util.new_report_provider(token=env.env_var.get("USER_1_TOKEN"), data=data, album_id=env.env_var.get("ALBUM_ID"))
-    env.env_var["REPORT_PROVIDER_2"]=rp["client_id"]
+    env.env_var["REPORT_PROVIDER_2"] = rp["client_id"]
 
 def test_get_report_provider_list_2():
     util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), count=2)
@@ -55,7 +55,7 @@ def test_add_report_provider_3():
     url = "https://reportprovider.kheops.online/.well-known/kheops-report-configuration"
     data = {"name": name, "url": url}
     rp = util.new_report_provider(token=env.env_var.get("USER_1_TOKEN"), data=data, album_id=env.env_var.get("ALBUM_ID"))
-    env.env_var["REPORT_PROVIDER_3"]=rp["client_id"]
+    env.env_var["REPORT_PROVIDER_3"] = rp["client_id"]
 
 def test_get_report_provider_list_3():
     util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), count=3)
@@ -111,3 +111,9 @@ def test_metadata_report_provider_valid():
 def test_metadata_report_provider_unvalid():
     metadata = util.test_report_provider_uri(token=env.env_var.get("USER_1_TOKEN"), url="https://reportprovider.kheops.online/.well-known/")
     assert metadata["valid"] == False
+
+#def test_delete_all_album():
+#    albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"))
+#    for album in albums:
+#        if album["number_of_users"] == 1:
+#            util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=album["album_id"])
