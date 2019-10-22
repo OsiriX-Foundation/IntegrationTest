@@ -37,10 +37,15 @@ def studies_list(token, params={}, count=1):
     headers = {"Authorization": "Bearer "+ token}
     response = requests.get(request_url, headers=headers, params=params)
     print_request("GET", response, request_url)
-    assert response.status_code == 200
-    assert response.headers.get("X-Total-Count") == str(count)
-    studiesList = json.loads(response.content)
-    return studiesList
+    if count != 0:
+        assert response.status_code == 200
+        assert response.headers.get("X-Total-Count") == str(count)
+        studiesList = json.loads(response.content)
+        return studiesList
+    else:
+        assert response.status_code == 204
+        assert response.headers.get("X-Total-Count") == str(count)
+
 
 def get_token(username, password, realm="travis", client_id="loginConnect"):
     well_known_url = "https://keycloak.kheops.online/auth/realms/"+str(realm)+"/.well-known/openid-configuration"
@@ -158,4 +163,90 @@ def delete_report_provider(token, client_id, album_id, status_code=204):
     headers = {"Authorization": "Bearer "+ token}
     response = requests.delete(request_url, headers=headers)
     print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
+
+
+
+################################################################
+# CAPABILITIES TOKENS
+################################################################
+
+def new_token(token, data, status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/capabilities"
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.post(request_url, headers=headers, data=urlencode(data))
+    print_request("POST", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 201:
+        reportprovider = json.loads(response.content)
+        return reportprovider
+
+
+################################################################
+# SERIES & STUDIES
+################################################################
+
+def share_series_in_album(token, studies_UID, series_UID, album_id, X_Token_Source = "", status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID+"/albums/"+album_id
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    if X_Token_Source != "":
+        headers["X-Token-Source"] = X_Token_Source
+    response = requests.put(request_url, headers=headers)
+    print_request("PUT", response, request_url)
+    assert response.status_code == status_code
+
+def share_study_in_album(token, studies_UID, album_id, X_Token_Source = "", status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/albums/"+album_id
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    if X_Token_Source != "":
+        headers["X-Token-Source"] = X_Token_Source
+    response = requests.put(request_url, headers=headers)
+    print_request("PUT", response, request_url)
+    assert response.status_code == status_code
+
+def share_series_with_user(token, user, studies_UID, series_UID, status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID+"/users/"+user
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.put(request_url, headers=headers)
+    print_request("PUT", response, request_url)
+    assert response.status_code == status_code
+
+def share_study_with_user(token, user, studies_UID, status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/users/"+user
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.put(request_url, headers=headers)
+    print_request("PUT", response, request_url)
+    assert response.status_code == status_code
+
+def delete_series_from_inbox(token, studies_UID, series_UID, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.delete(request_url, headers=headers)
+    print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
+
+def appropriate_study(token, studies_UID, X_Token_Source = "", status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID
+    headers = {"Authorization": "Bearer "+ token}
+    if X_Token_Source != "":
+        headers["X-Token-Source"] = X_Token_Source
+    response = requests.put(request_url, headers=headers)
+    print_request("PUT", response, request_url)
+    assert response.status_code == status_code
+
+def appropriate_series(token, studies_UID, series_UID, X_Token_Source = "", status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID
+    headers = {"Authorization": "Bearer "+ token}
+    if X_Token_Source != "":
+        headers["X-Token-Source"] = X_Token_Source
+    response = requests.put(request_url, headers=headers)
+    print_request("PUT", response, request_url)
     assert response.status_code == status_code

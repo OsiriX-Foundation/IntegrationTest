@@ -23,7 +23,6 @@ def test_get_token():
     token = util.get_token(username="tata", password="tata")
     env.env_var["USER_3_TOKEN"] = token
 
-
 def test_new_album():
     print()
     name = "the album name"
