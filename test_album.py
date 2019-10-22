@@ -45,6 +45,7 @@ def test_new_album():
     assert album["number_of_comments"] == 0
     assert album["number_of_studies"] == 0
     assert album["modalities"] == []
+    env.env_var["ALBUM_ID"]=album["album_id"]
 
 def test_stow():
     util.stow(token=env.env_var.get("USER_1_TOKEN"))
@@ -52,3 +53,11 @@ def test_stow():
 def test_get_studies_list_from_inbox():
     params = {"inbox": "True"}
     util.studies_list(token=env.env_var.get("USER_1_TOKEN"),params=params, count=1)
+
+#########
+### clean
+#########
+
+def test_clean():
+    util.delete_series_from_inbox(token=env.env_var.get("USER_1_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"))
+    util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"))
