@@ -25,7 +25,7 @@ def test_get_token():
 
 def test_new_album_src():
     print()
-    name = "the album name"
+    name = "album src"
     description = "the album description"
     data = {"sendSeries":"false", "name":name, "description": description}
     album = util.new_album(token=env.env_var.get("USER_1_TOKEN"), data=data)
@@ -47,7 +47,7 @@ def test_new_album_src():
     assert album["modalities"] == []
     env.env_var["ALBUM_ID_SRC"]=album["album_id"]
 
-def test_stow__album_src():
+def test_stow_album_src():
     params = {"album": env.env_var.get("ALBUM_ID_SRC")}
     util.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
 
@@ -64,7 +64,7 @@ def test_album_studies_list_user2():
 
 def test_new_album_dest():
     print()
-    name = "the album name"
+    name = "album dst"
     description = "the album description"
     data = {"sendSeries":"false", "name":name, "description": description}
     album = util.new_album(token=env.env_var.get("USER_2_TOKEN"), data=data)
@@ -84,21 +84,28 @@ def test_new_album_dest():
     assert album["number_of_comments"] == 0
     assert album["number_of_studies"] == 0
     assert album["modalities"] == []
-    env.env_var["ALBUM_ID_DEST"]=album["album_id"]
+    env.env_var["ALBUM_ID_DST"]=album["album_id"]
+
+def test_user2_2_albums():
+    res=util.list_albums(token=env.env_var.get("USER_2_TOKEN"), count=2)
 
 def test_album_studies_list_user2_empty():
     params = {"album": env.env_var.get("ALBUM_ID_DST")}
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
-def test_send_album_to_album_forbidden():
-    util.share_study_in_album_from_album(token=env.env_var.get("USER_1_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), album_src_id=env.env_var.get("ALBUM_ID_SRC"), album_dst_id=env.env_var.get("ALBUM_ID_DST"), status_code=403)
+#def test_send_album_to_album_forbidden():
+#    util.share_study_in_album_from_album(token=env.env_var.get("USER_1_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), album_src_id=env.env_var.get("ALBUM_ID_SRC"), album_dst_id=env.env_var.get("ALBUM_ID_DST"), status_code=403)
+#    params = {"album": env.env_var.get("ALBUM_ID_DST")}
+#    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_add_send_series_permission():
     data = {"sendSeries":"true"}
     util.edit_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID_SRC"), data=data)
 
-def test_send_album_to_album():
-    util.share_study_in_album_from_album(token=env.env_var.get("USER_1_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), album_src_id=env.env_var.get("ALBUM_ID_SRC"), album_dst_id=env.env_var.get("ALBUM_ID_DST"))
+#def test_send_album_to_album():
+#    util.share_study_in_album_from_album(token=env.env_var.get("USER_1_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), album_src_id=env.env_var.get("ALBUM_ID_SRC"), album_dst_id=env.env_var.get("ALBUM_ID_DST"))
+#    params = {"album": env.env_var.get("ALBUM_ID_DST")}
+#    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 #########
 ### clean
