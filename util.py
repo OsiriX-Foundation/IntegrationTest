@@ -77,6 +77,17 @@ def new_album(token, data={"name":"a name"}, status_code=201):
         album = json.loads(response.content)
         return album
 
+def edit_album(token, album_id, data, status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.patch(request_url, headers=headers, data=urlencode(data))
+    print_request("PATCH", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 201:
+        album = json.loads(response.content)
+        return album
+
 def list_albums(token, status_code=200, params={}, count=1):
     print()
     request_url = env.env_var.get("URL") + "/albums"
@@ -95,6 +106,14 @@ def delete_album(token, album_id, status_code=204):
     headers = {"Authorization": "Bearer "+ token}
     response = requests.delete(request_url, headers=headers)
     print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
+
+def add_user(token, album_id, user_id, status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users/" + user_id
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.put(request_url, headers=headers)
+    print_request("PUT", response, request_url)
     assert response.status_code == status_code
 
 
@@ -207,6 +226,15 @@ def share_study_in_album(token, studies_UID, album_id, X_Token_Source = "", stat
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
 
+def share_study_in_album_from_album(token, studies_UID, album_src_id, album_dst_id, status_code=201):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/albums/"+album_id
+    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
+    params = {"album": album_dst_id}
+    response = requests.put(request_url, headers=headers, params=params)
+    print_request("PUT", response, request_url)
+    assert response.status_code == status_code
+
 def share_series_with_user(token, user, studies_UID, series_UID, status_code=201):
     print()
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID+"/users/"+user
@@ -226,6 +254,14 @@ def share_study_with_user(token, user, studies_UID, status_code=201):
 def delete_series_from_inbox(token, studies_UID, series_UID, status_code=204):
     print()
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.delete(request_url, headers=headers)
+    print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
+
+def delete_series_from_album(token, studies_UID, series_UID, album_id, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID+"/albums/"+album_id
     headers = {"Authorization": "Bearer "+ token}
     response = requests.delete(request_url, headers=headers)
     print_request("DELETE", response, request_url)
