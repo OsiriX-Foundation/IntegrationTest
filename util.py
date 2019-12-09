@@ -100,6 +100,17 @@ def list_albums(token, status_code=200, params={}, count=1):
         albums = json.loads(response.content)
         return albums
 
+def get_album(token, album_id, status_code=200):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
+    response = requests.get(request_url, headers=headers)
+    print_request("GET", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 200:
+        album = json.loads(response.content)
+        return album
+
 def delete_album(token, album_id, status_code=204):
     print()
     request_url = env.env_var.get("URL") + "/albums/" + album_id

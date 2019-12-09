@@ -1,0 +1,52 @@
+import os
+import requests
+from requests.auth import AuthBase
+import json
+import urllib
+import time
+import pytest
+import env
+import util
+
+
+def test_init():
+    env.initialize()
+    print()
+
+def test_get_token():
+    #env.initialize()
+    print()
+    token = util.get_token(username="titi", password="titi")
+    env.env_var["USER_1_TOKEN"] = token
+    token = util.get_token(username="toto", password="toto")
+    env.env_var["USER_2_TOKEN"] = token
+    token = util.get_token(username="tata", password="tata")
+    env.env_var["USER_3_TOKEN"] = token
+
+def test_new_album():
+    #album = util.new_album(token=env.env_var.get("USER_1_TOKEN"))
+    #env.env_var["ALBUM_ID"] = album["album_id"]
+    env.env_var["ALBUM_ID"] = "NvQQOslINf"
+
+def test_get_studies_list_from_user3():
+    params = {"inbox": "true"}
+    util.studies_list(token=env.env_var.get("USER_3_TOKEN"),params=params, count=0)
+#def test_stow():
+#        params = {"album": env.env_var.get("ALBUM_ID")}
+#        util.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
+#
+def test_create_capability_token():
+    data={"title": "", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": False}
+    capability_token = util.new_token(token=env.env_var.get("USER_1_TOKEN"), data=data)
+    env.env_var["CAPABILITY_TOKEN"] = capability_token["secret"]
+
+def test_send_with_token_to_user_3_study():
+    util.share_study_with_user(token=env.env_var.get("CAPABILITY_TOKEN"), user="3685d976-f1d6-443c-95d4-95ee4b749878", studies_UID=env.env_var.get("STUDY_UID"))
+
+
+def test_get_studies_list_from_album():
+    params = {"album": env.env_var.get("ALBUM_ID")}
+    util.studies_list(token=env.env_var.get("USER_1_TOKEN"),params=params, count=1)
+
+#def test_delete_with_token_write_read():
+    #util.delete_series_from_inbox(token=env.env_var.get("CAPABILITY_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=204)
