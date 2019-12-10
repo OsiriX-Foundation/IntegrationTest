@@ -48,7 +48,7 @@ def test_get_studies_list_from_album():
     util.studies_list(token=env.env_var.get("USER_1_TOKEN"),params=params, count=1)
 
 def test_create_capability_token_read_write():
-    data={"title": "title", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": False}
+    data={"title": "title", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": True}
     capability_token = util.new_token(token=env.env_var.get("USER_1_TOKEN"), data=data)
     env.env_var["CAPABILITY_TOKEN_READ_WRITE"] = capability_token["secret"]
 
