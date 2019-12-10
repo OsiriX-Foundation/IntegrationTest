@@ -53,4 +53,4 @@ def test_create_capability_token_read_write():
     env.env_var["CAPABILITY_TOKEN_READ_WRITE"] = capability_token["secret"]
 
 def test_delete_with_token_read_write():
-    util.delete_series_from_inbox(token=env.env_var.get("CAPABILITY_TOKEN_READ_WRITE"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=204)
+    util.delete_series_from_album(token=env.env_var.get("CAPABILITY_TOKEN_READ_WRITE"), album_id=env.env_var.get("ALBUM_ID"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=204)
