@@ -58,7 +58,7 @@ def test_inbox_user2_studies_list():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_send_with_token_to_an_album():
-    util.share_series_in_album(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"), X_Token_Source=env.env_var.get("CAPABILITY_TOKEN"))
+    util.share_series_in_album(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"))
 
 def test_album_destination_studies_list_1():
     params = {"album": env.env_var.get("ALBUM_DESTINATION_ID")}
@@ -91,7 +91,7 @@ def test_inbox_user2_studies_list_study():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_send_with_token_to_an_album_study():
-    util.share_study_in_album(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"), X_Token_Source=env.env_var.get("CAPABILITY_TOKEN"))
+    util.share_study_in_album(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"))
 
 def test_album_destination_studies_list_1_study():
     params = {"album": env.env_var.get("ALBUM_DESTINATION_ID")}
@@ -147,7 +147,7 @@ def test_user2_studies_list_0_appropriate_study():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 def test_user2_appropriate_study():
-    util.appropriate_study(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), X_Token_Source=env.env_var.get("CAPABILITY_TOKEN"))
+    util.appropriate_study(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"))
 
 def test_user2_studies_list_1_appropriate_study():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=1)
@@ -163,7 +163,7 @@ def test_user2_studies_list_0_appropriate_series():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 def test_user2_appropriate_series():
-    util.appropriate_series(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), X_Token_Source=env.env_var.get("CAPABILITY_TOKEN"))
+    util.appropriate_series(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"))
 
 def test_user2_studies_list_1_appropriate_series():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=1)

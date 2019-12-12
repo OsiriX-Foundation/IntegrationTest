@@ -217,22 +217,22 @@ def new_token(token, data, status_code=201):
 # SERIES & STUDIES
 ################################################################
 
-def share_series_in_album(token, studies_UID, series_UID, album_id, X_Token_Source = "", status_code=201):
+def share_series_in_album(token, studies_UID, series_UID, album_id, X_Authorization_Source = "", status_code=201):
     print()
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID+"/albums/"+album_id
     headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
-    if X_Token_Source != "":
-        headers["X-Token-Source"] = X_Token_Source
+    if X_Authorization_Source != "":
+        headers["X-Authorization-Source"] = X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
 
-def share_study_in_album(token, studies_UID, album_id, X_Token_Source = "", status_code=201):
+def share_study_in_album(token, studies_UID, album_id, X_Authorization_Source = "", status_code=201):
     print()
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/albums/"+album_id
     headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
-    if X_Token_Source != "":
-        headers["X-Token-Source"] = X_Token_Source
+    if X_Authorization_Source != "":
+        headers["X-Authorization-Source"] = X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
@@ -278,22 +278,22 @@ def delete_series_from_album(token, studies_UID, series_UID, album_id, status_co
     print_request("DELETE", response, request_url)
     assert response.status_code == status_code
 
-def appropriate_study(token, studies_UID, X_Token_Source = "", status_code=201):
+def appropriate_study(token, studies_UID, X_Authorization_Source = "", status_code=201):
     print()
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID
     headers = {"Authorization": "Bearer "+ token}
-    if X_Token_Source != "":
-        headers["X-Token-Source"] = X_Token_Source
+    if X_Authorization_Source != "":
+        headers["X-Authorization-Source"] = X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
 
-def appropriate_series(token, studies_UID, series_UID, X_Token_Source = "", status_code=201):
+def appropriate_series(token, studies_UID, series_UID, X_Authorization_Source = "", status_code=201):
     print()
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID
     headers = {"Authorization": "Bearer "+ token}
-    if X_Token_Source != "":
-        headers["X-Token-Source"] = X_Token_Source
+    if X_Authorization_Source != "":
+        headers["X-Authorization-Source"] = X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
