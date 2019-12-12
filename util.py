@@ -222,7 +222,7 @@ def share_series_in_album(token, studies_UID, series_UID, album_id, X_Authorizat
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID+"/albums/"+album_id
     headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
     if X_Authorization_Source != "":
-        headers["X-Authorization-Source"] = X_Authorization_Source
+        headers["X-Authorization-Source"] = "Bearer " + X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
@@ -232,7 +232,7 @@ def share_study_in_album(token, studies_UID, album_id, X_Authorization_Source = 
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/albums/"+album_id
     headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
     if X_Authorization_Source != "":
-        headers["X-Authorization-Source"] = X_Authorization_Source
+        headers["X-Authorization-Source"] = "Bearer " + X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
@@ -283,7 +283,7 @@ def appropriate_study(token, studies_UID, X_Authorization_Source = "", status_co
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID
     headers = {"Authorization": "Bearer "+ token}
     if X_Authorization_Source != "":
-        headers["X-Authorization-Source"] = X_Authorization_Source
+        headers["X-Authorization-Source"] = "Bearer " + X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
@@ -293,7 +293,7 @@ def appropriate_series(token, studies_UID, series_UID, X_Authorization_Source = 
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID
     headers = {"Authorization": "Bearer "+ token}
     if X_Authorization_Source != "":
-        headers["X-Authorization-Source"] = X_Authorization_Source
+        headers["X-Authorization-Source"] = "Bearer " + X_Authorization_Source
     response = requests.put(request_url, headers=headers)
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
