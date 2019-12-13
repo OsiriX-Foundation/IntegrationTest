@@ -115,7 +115,7 @@ def test_user3_studies_list_0_series():
     util.studies_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
 
 def test_send_with_token_to_user_3_series():
-    util.share_series_with_user(token=env.env_var.get("CAPABILITY_TOKEN"), user="tata@gmail.com", studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=403)
+    util.share_series_with_user(token=env.env_var.get("CAPABILITY_TOKEN"), user="tata@gmail.com", studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=404)
 
 def test_user3_studies_list_1_series():
     util.studies_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
