@@ -162,7 +162,10 @@ def test_remove_series_from_inbox_user_2_appropriate_study():
 def test_user2_studies_list_0_appropriate_series():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
-def test_user2_appropriate_series():
+def test_user2_appropriate_series_first_time():
+    util.appropriate_series(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"))
+
+def test_user2_appropriate_series_second_time():
     util.appropriate_series(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"))
 
 def test_user2_studies_list_1_appropriate_series():
