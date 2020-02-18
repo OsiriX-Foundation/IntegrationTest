@@ -7,26 +7,43 @@ services:
     image: dcm4che/slapd-dcm4chee:${PACS_LDAP_IMAGE_TAG}
     env_file: docker-compose.env
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
       - dcm4chee-ldap-ldap:/var/lib/ldap
       - dcm4chee-ldap-slapdd:/etc/ldap/slapd.d
     restart: on-failure
 
-  db:
-    container_name: db
-    image: osirixfoundation/kheops-database:${KHEOPS_DATABASE_IMAGE_TAG}
+  pacsdb:
+    container_name: pacsdb
+    image: dcm4che/postgres-dcm4chee:${PACS_PSQL_IMAGE_TAG}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+    environment:
+      - POSTGRES_DB=pacsdb
+      - POSTGRES_USER=pacs
+      - POSTGRES_PASSWORD_FILE=/run/secrets/kheops_pacsdb_pass
     volumes:
-      - kheops-db-data:/var/lib/postgresql/data
-    env_file: docker-compose.env
+      - dcm4chee-db-data:/var/lib/postgresql/data
     secrets:
-      - kheops_authdb_pass
       - kheops_pacsdb_pass
     restart: on-failure
 
+  auth-db:
+    container_name: authdb
+    image: postgres:${KHEOPS_AUTHORIZATION_PSQL_DATABASE_IMAGE_TAG}
+    volumes:
+      - kheops-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=kheops
+      - POSTGRES_USER=kheopsuser
+      - POSTGRES_PASSWORD_FILE=/run/secrets/kheops_authdb_pass
+    secrets:
+      - kheops_authdb_pass
+    restart: on-failure
+    
   arc:
     container_name: pacsarc
-    image: osirixfoundation/kheops-dcm4chee-arc-psql:${KHEOPS_ARC_IMAGE_TAG}
+    image: dcm4che/dcm4chee-arc-psql:${KHEOPS_ARC_IMAGE_TAG}
     ports:
       - "8080:8080"
       - "8443:8443"
@@ -37,16 +54,18 @@ services:
     env_file: docker-compose.env
     environment:
       WILDFLY_CHOWN: /storage /opt/wildfly/standalone
-      WILDFLY_WAIT_FOR: ldap:389 db:5432
+      WILDFLY_WAIT_FOR: ldap:389 pacsdb:5432
       JAVA_OPTS: -Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n
+      POSTGRES_DB: pacsdb
+      POSTGRES_USER: pacs
+      POSTGRES_PASSWORD_FILE: /run/secrets/kheops_pacsdb_pass
+      POSTGRES_HOST: pacsdb
     secrets:
       - kheops_pacsdb_pass
     depends_on:
       - ldap
-      - db
+      - pacsdb
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
       - dcm4chee-arc-wildfly:/opt/wildfly/standalone
       - /dcm4chee-arc/storage:/storage
     restart: on-failure
@@ -54,13 +73,10 @@ services:
   kheops-authorization:
     container_name: kheopsauthorization
     image: osirixfoundation/kheops-authorization:${KHEOPS_AUTHORIZATION_IMAGE_TAG}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
     restart: on-failure
     env_file: docker-compose.env
     depends_on:
-      - db
+      - auth-db
       - arc
     secrets:
       - kheops_superuser_hmasecret
@@ -74,9 +90,6 @@ services:
   kheops-zipper:
     container_name: kheopszipper
     image: osirixfoundation/kheops-zipper:${KHEOPS_ZIPPER_IMAGE_TAG}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
     restart: on-failure
     env_file: docker-compose.env
     depends_on:
@@ -87,9 +100,6 @@ services:
   kheops-ui:
     container_name: kheopsui
     image: osirixfoundation/kheops-ui:${KHEOPS_UI_IMAGE_TAG}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
     env_file: docker-compose.env
     restart: on-failure
     depends_on:
@@ -99,9 +109,6 @@ services:
   kheops-dicomweb-proxy:
     container_name: kheopsdicomwebproxy
     image: osirixfoundation/kheops-dicomweb-proxy:${KHEOPS_DICOMWEB_PROXY_IMAGE_TAG}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
     restart: on-failure
     env_file: docker-compose.env
     ports:
@@ -117,9 +124,6 @@ services:
     image: osirixfoundation/kheops-reverse-proxy:${KHEOPS_REVERSE_PROXY_IMAGE_TAG}
     container_name: kheopsreverseproxy
     env_file: docker-compose.env
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
     ports:
       - "80:80"
       - "443:443"
@@ -137,9 +141,6 @@ services:
     container_name: pacsauthorizationproxy
     env_file: docker-compose.env
     image: osirixfoundation/pacs-authorization-proxy:${PACS_AUTHORIZATION_PROXY_IMAGE_TAG}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${TIME_ZONE}:/etc/timezone:ro
     ports:
       - "82:80"
     depends_on:
@@ -149,10 +150,10 @@ services:
       - kheops_auth_hmasecret_post
 
 secrets:
-  kheops_authdb_pass:
-    file: ${SECRETS_PATH}/kheops_authdb_pass
   kheops_pacsdb_pass:
     file: ${SECRETS_PATH}/kheops_pacsdb_pass
+  kheops_authdb_pass:
+    file: ${SECRETS_PATH}/kheops_authdb_pass
   kheops_superuser_hmasecret:
     file: ${SECRETS_PATH}/kheops_superuser_hmasecret
   kheops_auth_hmasecret:
