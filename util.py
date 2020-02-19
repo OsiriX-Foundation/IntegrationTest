@@ -65,7 +65,6 @@ def get_token(username, password, realm="travis", client_id="loginConnect"):
 ################################################################
 # ALBUMS
 ################################################################
-
 def new_album(token, data={"name":"a name"}, status_code=201):
     print()
     request_url = env.env_var.get("URL") + "/albums"
@@ -118,6 +117,19 @@ def delete_album(token, album_id, status_code=204):
     response = requests.delete(request_url, headers=headers)
     print_request("DELETE", response, request_url)
     assert response.status_code == status_code
+
+def delete_all_ablums(token):
+    print()
+    request_url = env.env_var.get("URL") + "/albums"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
+    response = requests.get(request_url, headers=headers, params={})
+    print_request("GET", response, request_url)
+    if response.status_code == 200:
+        list_albums = json.loads(response.content)
+        for album in list_albums:
+            #test if admin in album before delete
+            delete_album(token, album['album_id']) 
+            #if not in album, leave album (group)
 
 def add_user(token, album_id, user_id, status_code=201):
     print()
