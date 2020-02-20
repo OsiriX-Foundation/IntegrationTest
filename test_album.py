@@ -134,3 +134,38 @@ def test_edit_album():
     assert edit_album["write_comments"]== True
     assert edit_album["notification_new_series"]== True
     assert edit_album["notification_new_comment"]==True
+
+def test_add_user_in_album():
+    album_shared_in_album = False
+    album_added_in_album = False
+    album_id_shared = env.env_var.get("ALBUM_ID")
+    util.add_user(token=env.env_var.get("USER_1_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
+    #add an album 
+    album_added = util.new_album(token=env.env_var['USER_2_TOKEN'], data={"name":"my album"})
+    #test if user2 contain album_id
+    list_albums_user2= util.list_albums(token=env.env_var.get("USER_2_TOKEN"),count=2)
+    for album in list_albums_user2:
+        if album['album_id']==album_id_shared:
+            album_shared_in_album = True
+        elif album['album_id']==album_added['album_id']:
+            album_added_in_album = True    
+    assert album_shared_in_album
+    assert album_added_in_album 
+
+################Test user permission################
+def test_edit_album_forbidden():
+    data = {"name":"edit name","description":"edit desc","sendSeries":True, "addUser":True, "deleteSeries":True, "notificationNewSeries":False, "notificationNewComment":False}
+    album_id_shared = env.env_var.get("ALBUM_ID")
+    util.edit_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), data=data,  status_code=403)
+
+def test_edit_album_notif_and_more_forbidden():
+    data = {"name":"edit name","description":"edit desc","addUser":True, "downloadSeries":False, "sendSeries":False, "deleteSeries":True, "addSeries":False, "writeComments":False, "notificationNewSeries":False, "notificationNewComment":False}
+    album_id_shared = env.env_var.get("ALBUM_ID")
+    util.edit_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), data=data,  status_code=403)
+    
+def test_edit_album_notification_ok():
+    #edit album notification ok
+    data = {"notificationNewSeries":False, "notificationNewComment":False}
+    album_id_shared = env.env_var.get("ALBUM_ID")
+    util.edit_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), data=data)
+    
