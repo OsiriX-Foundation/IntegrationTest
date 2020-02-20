@@ -215,16 +215,16 @@ def test_get_album_list_filter_by_name():
 
 
 def test_get_album_list_filter_by_name_starts_with_star():    
-    nameFilter="*me"
-    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":nameFilter}, count=2)
+    name_filter="*me"
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=2)
     assert list_albums[0]['name'] == "re edit name"
     assert list_albums[1]['name'] == "re edit name"
     assert list_albums[0]['album_id'] == env.env_var["ALBUM_ID_5"]
     assert list_albums[1]['album_id'] == env.env_var["ALBUM_ID_1"]
 
 def test_get_album_list_filter_by_name_ends_with_star():    
-    nameFilter="a new*"
-    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":nameFilter}, count=3)
+    name_filter="a new*"
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=3)
     assert list_albums[0]['name'] == "a new album2"
     assert list_albums[1]['name'] == "a new album1"
     assert list_albums[2]['name'] == "a new album"
