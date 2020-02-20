@@ -231,3 +231,19 @@ def test_get_album_list_filter_by_name_ends_with_star():
     assert list_albums[0]['album_id'] == env.env_var["ALBUM_ID_4"]
     assert list_albums[1]['album_id'] == env.env_var["ALBUM_ID_3"]
     assert list_albums[2]['album_id'] == env.env_var["ALBUM_ID_2"]
+
+def test_get_album_list_filter_by_fuzzymatching():
+    params={"name":"aaa new lfummn", "fuzzymatching":True}
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params=params, count=3)
+    assert list_albums[0]['name'] == "a new album2"
+    assert list_albums[1]['name'] == "a new album1"
+    assert list_albums[2]['name'] == "a new album"
+    assert list_albums[0]['album_id'] == env.env_var["ALBUM_ID_4"]
+    assert list_albums[1]['album_id'] == env.env_var["ALBUM_ID_3"]
+    assert list_albums[2]['album_id'] == env.env_var["ALBUM_ID_2"]
+
+def test_get_album_list_filter_by_favorite():
+    params={"favorite":True}
+    util.add_favorite(env.env_var.get("USER_1_TOKEN"), env.env_var["ALBUM_ID_4"])
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params=params, count=1)
+    assert list_albums[0]["album_id"] == env.env_var['ALBUM_ID_4']
