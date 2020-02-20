@@ -102,6 +102,7 @@ def test_new_album_with_different_param():
 def test_get_albums_not_found():
     util.get_album(env.env_var.get("USER_1_TOKEN"), "1", 404)
 
+################Test edit album##########################
 def test_edit_album():
     edit_name= "edit name"
     edit_desc= "edit desc"
@@ -119,8 +120,9 @@ def test_edit_album():
     assert edit_album["notification_new_series"]== False
     assert edit_album["notification_new_comment"]==False
 
-    edit_name= "redit name"
-    edit_desc= "redit desc"
+    #re edit
+    edit_name= "re dit name"
+    edit_desc= "re dit desc"
     data = {"name":edit_name,"description":edit_desc,"sendSeries":False, "addUser":False, "deleteSeries":True, "notificationNewSeries":True, "notificationNewComment":True}
     util.edit_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), data=data)
     edit_album = util.get_album(env.env_var.get("USER_1_TOKEN"), env.env_var.get("ALBUM_ID"))
@@ -155,17 +157,49 @@ def test_add_user_in_album():
 ################Test user permission################
 def test_edit_album_forbidden():
     data = {"name":"edit name","description":"edit desc","sendSeries":True, "addUser":True, "deleteSeries":True, "notificationNewSeries":False, "notificationNewComment":False}
-    album_id_shared = env.env_var.get("ALBUM_ID")
     util.edit_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), data=data,  status_code=403)
 
 def test_edit_album_notif_and_more_forbidden():
     data = {"name":"edit name","description":"edit desc","addUser":True, "downloadSeries":False, "sendSeries":False, "deleteSeries":True, "addSeries":False, "writeComments":False, "notificationNewSeries":False, "notificationNewComment":False}
-    album_id_shared = env.env_var.get("ALBUM_ID")
     util.edit_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), data=data,  status_code=403)
     
-def test_edit_album_notification_ok():
-    #edit album notification ok
+def test_edit_album_notif_ok():
     data = {"notificationNewSeries":False, "notificationNewComment":False}
-    album_id_shared = env.env_var.get("ALBUM_ID")
     util.edit_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), data=data)
-    
+
+def test_remove_user_in_album():
+    album_id_shared=env.env_var.get("ALBUM_ID")
+    album_shared_in_album= True
+    util.remove_user(token=env.env_var.get("USER_1_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
+    list_albums_user2= util.list_albums(token=env.env_var.get("USER_2_TOKEN"),count=1)
+    #check that the album is no longer present in its list 
+    for album in list_albums_user2:
+        if album['album_id']==album_id_shared:
+            album_shared_in_album = False
+    assert album_shared_in_album
+
+def test_user_self_deletes_from_the_album():
+    #re adding a user2 in the album
+    album_id_shared = env.env_var.get("ALBUM_ID")
+    album_shared_in_album= True
+    util.add_user(token=env.env_var.get("USER_1_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
+    util.remove_user(token=env.env_var.get("USER_2_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
+    list_albums_user2= util.list_albums(token=env.env_var.get("USER_2_TOKEN"),count=1)
+    #check that the album is no longer present in its list 
+    for album in list_albums_user2:
+        if album['album_id']==album_id_shared:
+            
+            album_shared_in_album = False
+    assert album_shared_in_album
+
+################Test filter#################################
+def test_get_album_list_filter_by_name():    
+    nameFilter="re dit name"
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":nameFilter}, count=1)
+    print(list_albums[0]['name'])
+    assert list_albums[0]['name'] == nameFilter
+    #create a new album with same name
+    util.new_album(token=env.env_var['USER_1_TOKEN'], data={"name":nameFilter, "description": "a desc"})
+    list_of_2_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":nameFilter}, count=2)
+    assert list_of_2_albums[0]['name'] == nameFilter
+    assert list_of_2_albums[1]['name'] == nameFilter

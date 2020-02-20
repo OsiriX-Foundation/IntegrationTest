@@ -139,6 +139,13 @@ def add_user(token, album_id, user_id, status_code=201):
     print_request("PUT", response, request_url)
     assert response.status_code == status_code
 
+def remove_user(token, album_id, user_id, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users/" + user_id
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.delete(request_url, headers=headers)
+    print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
 
 ################################################################
 # REPORT PROVIDER
