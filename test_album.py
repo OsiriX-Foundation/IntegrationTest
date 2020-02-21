@@ -292,7 +292,7 @@ def test_get_album_list_sort_by_name():
     assert list_albums[1]['name'] == "filter by name"
     assert list_albums[0]['name'] == "re edit name"
 
-def test_get_album_list_created_time():
+def test_get_album_list_by_created_time():
     #sort +
     list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"sort":"created_time"}, count=5)
     assert list_albums[0]['name'] == "re edit name"
