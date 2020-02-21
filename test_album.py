@@ -20,11 +20,11 @@ def test_get_token():
 #################### BASIC ALBUM TEST#############################
 def test_get_albums_empty_list():
     #Test with user 1
-    rq_album.delete_all_ablums(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
     list_albums= rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"), count=0)
     assert len(list_albums) == 0
     #Test with user 2
-    rq_album.delete_all_ablums(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
     list_albums= rq_album.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
     assert len(list_albums) == 0
 

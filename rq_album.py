@@ -62,7 +62,7 @@ def delete(token, album_id, status_code=204):
     util.print_request("DELETE", response, request_url)
     assert response.status_code == status_code
 
-def delete_all_ablums(token):
+def delete_all(token):
     print()
     request_url = env.env_var.get("URL") + "/albums"
     headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
