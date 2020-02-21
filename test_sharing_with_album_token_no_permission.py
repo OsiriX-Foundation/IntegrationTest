@@ -7,6 +7,7 @@ import time
 import pytest
 import env
 import util
+import rq_album
 
 def test_init():
     env.initialize()
@@ -21,7 +22,7 @@ def test_get_token():
     env.env_var["USER_3_TOKEN"] = token
 
 def test_new_album():
-    album = util.new_album(token=env.env_var.get("USER_1_TOKEN"))
+    album = rq_album.create(token=env.env_var.get("USER_1_TOKEN"))
     env.env_var["ALBUM_ID"] = album["album_id"]
 
 def test_stow():
@@ -46,7 +47,7 @@ def test_create_capability_token():
 #########
 
 def test_new_album_destination():
-    album = util.new_album(token=env.env_var.get("USER_2_TOKEN"))
+    album = rq_album.create(token=env.env_var.get("USER_2_TOKEN"))
     env.env_var["ALBUM_DESTINATION_ID"] = album["album_id"]
 
 def test_album_destination_studies_list():
@@ -69,7 +70,7 @@ def test_inbox_user2_studies_list_0():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_delete_album():
-    util.delete_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"))
+    rq_album.delete(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"))
 
 def test_user2_studies_list():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
@@ -79,7 +80,7 @@ def test_user2_studies_list():
 #########
 
 def test_new_album_destination_study():
-    album = util.new_album(token=env.env_var.get("USER_2_TOKEN"))
+    album = rq_album.create(token=env.env_var.get("USER_2_TOKEN"))
     env.env_var["ALBUM_DESTINATION_ID"] = album["album_id"]
 
 def test_album_destination_studies_list_study():
@@ -102,7 +103,7 @@ def test_inbox_user2_studies_list_0_study():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_delete_album_study():
-    util.delete_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"))
+    rq_album.delete(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"))
 
 def test_user2_studies_list_study():
     util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
