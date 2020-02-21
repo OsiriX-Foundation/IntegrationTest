@@ -5,6 +5,7 @@ import urllib
 import pytest
 import env
 import util
+import rq_album
 
 
 def test_init():
@@ -22,7 +23,7 @@ def test_get_token():
 
 def test_new_album():
     print()
-    album=util.new_album(token=env.env_var.get("USER_1_TOKEN"))
+    album=rq_album.create(token=env.env_var.get("USER_1_TOKEN"))
     env.env_var["ALBUM_ID"]=album["album_id"]
 
 def test_stow():
@@ -126,7 +127,7 @@ def test_metadata_report_provider_unvalid():
     assert metadata["valid"] == False
 
 def test_delete_all_album():
-    albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"))
+    albums = rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"))
     for album in albums:
         if album["number_of_users"] == 1:
-            util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=album["album_id"])
+            rq_album.delete(token=env.env_var.get("USER_1_TOKEN"), album_id=album["album_id"])
