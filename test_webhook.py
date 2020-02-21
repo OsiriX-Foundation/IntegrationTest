@@ -8,6 +8,7 @@ import pytest
 import env
 import util
 import pprint
+import rq_album
 
 def test_init():
     env.initialize()
@@ -22,7 +23,7 @@ def test_get_token():
     env.env_var["USER_3_TOKEN"] = token
 
 def test_new_album_with_2_users():
-    album = util.new_album(token=env.env_var.get("USER_1_TOKEN"))
+    album = rq_album.create(token=env.env_var.get("USER_1_TOKEN"))
     env.env_var["ALBUM_ID"] = album["album_id"]
     util.share_series_in_album(token=env.env_var.get("USER_1_TOKEN"), studies_UID="1.2.3.4.5.6", series_UID="1.2.3.4", album_id=env.env_var.get("ALBUM_ID"))
 
@@ -52,7 +53,7 @@ def test_get_webhooks():
     webhooks = util.get_webhooks(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"))
 
 def test_add_user():
-    util.add_user(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), user_id=env.env_var.get("USER_2_MAIL"))
+    rq_album.add_user(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), user_id=env.env_var.get("USER_2_MAIL"))
     time.sleep(2)
 
 def test_trigger_user_webhook():
