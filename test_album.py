@@ -23,7 +23,7 @@ def test_get_token():
     env.env_var["USER_2_TOKEN"] = token
     token = util.get_token(username="tata", password="tata")
     env.env_var["USER_3_TOKEN"] = token
-
+#################### BASIC ALBUM TEST#############################
 def test_get_albums_empty_list():
     #Test with user 1
     util.delete_all_ablums(token=env.env_var['USER_1_TOKEN'])
@@ -106,7 +106,7 @@ def test_new_album_with_different_param():
 def test_get_albums_not_found():
     util.get_album(env.env_var.get("USER_1_TOKEN"), "1", 404)
 
-################Test edit album##########################
+################EDIT ALBUM TEST##########################
 def test_edit_album():
     edit_name= "edit name"
     edit_desc= "edit desc"
@@ -158,7 +158,7 @@ def test_add_user_in_album():
     assert album_shared_in_album
     assert album_added_in_album 
 
-################Test user permission################
+################PERMISSION USER TEST################
 def test_edit_album_forbidden():
     data = {"name":"edit name","description":"edit desc","sendSeries":True, "addUser":True, "deleteSeries":True, "notificationNewSeries":False, "notificationNewComment":False}
     util.edit_album(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID_1"), data=data,  status_code=403)
@@ -196,28 +196,28 @@ def test_user_self_deletes_from_the_album():
             album_shared_in_album = False
     assert album_shared_in_album
 
-################Test filter#################################
+###################FILTER TEST#################################
 def test_get_album_list_filter_by_name():    
     name_filter="re edit name"
-    name_filter_false = "na"
     list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=1)
     assert list_albums[0]['name'] == name_filter
 
     #Test with same name
+    name_filter="filter by name"
     album = util.new_album(token=env.env_var['USER_1_TOKEN'], data={"name":name_filter, "description": "a desc"})
     env.env_var["ALBUM_ID_5"]=album["album_id"]
-    list_of_2_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=2)
+    list_of_2_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=1)
     assert list_of_2_albums[0]['name'] == name_filter
-    assert list_of_2_albums[1]['name'] == name_filter
 
     #Test bad request
+    name_filter_false = "na"
     util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter_false}, count=0)
 
 
 def test_get_album_list_filter_by_name_starts_with_star():    
     name_filter="*me"
     list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=2)
-    assert list_albums[0]['name'] == "re edit name"
+    assert list_albums[0]['name'] == "filter by name"
     assert list_albums[1]['name'] == "re edit name"
     assert list_albums[0]['album_id'] == env.env_var["ALBUM_ID_5"]
     assert list_albums[1]['album_id'] == env.env_var["ALBUM_ID_1"]
@@ -247,3 +247,79 @@ def test_get_album_list_filter_by_favorite():
     util.add_favorite(env.env_var.get("USER_1_TOKEN"), env.env_var["ALBUM_ID_4"])
     list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params=params, count=1)
     assert list_albums[0]["album_id"] == env.env_var['ALBUM_ID_4']
+
+
+def test_get_album_list_filter_by_limit_offset():
+    params={"offset":"2", "limit":"4"}
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={}, count=5)
+    list_albums_with_params = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params=params, count=5)
+    assert list_albums[2] == list_albums_with_params[0]
+    assert list_albums[3] == list_albums_with_params[1]
+
+    params={"offset":"2"}
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={}, count=5)
+    list_albums_with_params = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params=params, count=5)
+    assert list_albums[2] == list_albums_with_params[0]
+    assert list_albums[3] == list_albums_with_params[1]
+    assert list_albums[4] == list_albums_with_params[2]
+
+    params={"limit":"4"}
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={}, count=5)
+    list_albums_with_params = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params=params, count=5)
+    assert list_albums[0] == list_albums_with_params[0]
+    assert list_albums[1] == list_albums_with_params[1]
+    assert list_albums[2] == list_albums_with_params[2]
+    assert list_albums[3] == list_albums_with_params[3]
+
+def test_get_album_list_filter_by_limit_offset_bad_params():
+    util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"limit":"a4"}, status_code=400)
+    util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"limit":"-2"}, status_code=400)
+    util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"limit":"/hfgh"}, status_code=400)
+
+def test_get_album_list_sort_by_name():
+    #sort +
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"sort":"name"}, count=5)
+    assert list_albums[0]['name'] == "a new album"
+    assert list_albums[1]['name'] == "a new album1"
+    assert list_albums[2]['name'] == "a new album2"
+    assert list_albums[3]['name'] == "filter by name"
+    assert list_albums[4]['name'] == "re edit name"
+    #sort -
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"sort":"-name"}, count=5)
+    assert list_albums[4]['name'] == "a new album"
+    assert list_albums[3]['name'] == "a new album1"
+    assert list_albums[2]['name'] == "a new album2"
+    assert list_albums[1]['name'] == "filter by name"
+    assert list_albums[0]['name'] == "re edit name"
+
+def test_get_album_list_created_time():
+    #sort +
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"sort":"created_time"}, count=5)
+    assert list_albums[0]['name'] == "re edit name"
+    assert list_albums[1]['name'] == "a new album"
+    assert list_albums[2]['name'] == "a new album1"
+    assert list_albums[3]['name'] == "a new album2"
+    assert list_albums[4]['name'] == "filter by name"
+    #sort -
+    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"sort":"-created_time"}, count=5)
+    assert list_albums[0]['name'] == "filter by name"
+    assert list_albums[1]['name'] == "a new album2"
+    assert list_albums[2]['name'] == "a new album1"
+    assert list_albums[3]['name'] == "a new album"
+    assert list_albums[4]['name'] == "re edit name"
+
+##############################TEST DELETE######################################
+def test_album_delete_not_found():
+    util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id="1", status_code=404)
+
+def test_album_delete_albums():
+    #delete use 1 albums
+    util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_1'], status_code=204)
+    util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_2'], status_code=204)
+    util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_3'], status_code=204)
+    util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_4'], status_code=204)
+    util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_5'], status_code=204)
+    id_album=""
+    #delete user 2 albums
+    list_albums= util.list_albums(token=env.env_var.get("USER_2_TOKEN"), count=1)
+    util.delete_album(token=env.env_var.get("USER_2_TOKEN"), album_id=list_albums[0]["album_id"], status_code=204)
