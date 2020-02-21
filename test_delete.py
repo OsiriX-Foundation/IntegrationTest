@@ -7,7 +7,7 @@ import time
 import pytest
 import env
 import util
-
+import rq_album
 
 def test_init():
     env.initialize()
@@ -24,7 +24,7 @@ def test_get_token():
     env.env_var["USER_3_TOKEN"] = token
 
 def test_new_album():
-    album = util.new_album(token=env.env_var.get("USER_1_TOKEN"))
+    album = rq_album.create(token=env.env_var.get("USER_1_TOKEN"))
     env.env_var["ALBUM_ID"] = album["album_id"]
 
 def test_get_studies_list_from_user3():
