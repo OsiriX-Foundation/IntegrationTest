@@ -319,7 +319,6 @@ def test_album_delete_albums():
     util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_3'], status_code=204)
     util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_4'], status_code=204)
     util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_5'], status_code=204)
-    id_album=""
     #delete user 2 albums
     list_albums= util.list_albums(token=env.env_var.get("USER_2_TOKEN"), count=1)
     util.delete_album(token=env.env_var.get("USER_2_TOKEN"), album_id=list_albums[0]["album_id"], status_code=204)
