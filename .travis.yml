@@ -29,3 +29,5 @@ script:
   - pytest -s -v test_sharing_with_album_token.py
   - ./script_run_docker.sh
   - pytest -s -v test_report_providers.py
+  - ./script_run_docker.sh
+  - pytest -s -v test_favorite.py
