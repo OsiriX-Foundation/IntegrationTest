@@ -30,4 +30,4 @@ script:
   - ./script_run_docker.sh
   - pytest -s -v test_report_providers.py
   - ./script_run_docker.sh
-  - pytest -s -v test_favorite.py
+  - pytest -s -v test_album_favorite.py

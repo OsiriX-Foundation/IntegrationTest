@@ -39,4 +39,4 @@ def test_remove_album_to_favorites():
     #add and remove
     util.add_favorite(env.env_var.get("USER_1_TOKEN"), env.env_var["ALBUM_ID_2"])
     util.remove_favorite(env.env_var.get("USER_1_TOKEN"), env.env_var["ALBUM_ID_2"])
-    list_albums = util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"favorite":True}, count=1)
+    util.list_albums(token=env.env_var.get("USER_1_TOKEN"), params={"favorite":True}, count=1)
