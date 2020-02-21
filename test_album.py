@@ -309,10 +309,10 @@ def test_get_album_list_by_created_time():
     assert list_albums[4]['name'] == "re edit name"
 
 ##############################TEST DELETE######################################
-def test_album_delete_not_found():
+def test_delete_album_not_found():
     util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id="1", status_code=404)
 
-def test_album_delete_albums():
+def test_delete_albums():
     #delete use 1 albums
     util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_1'], status_code=204)
     util.delete_album(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_2'], status_code=204)
