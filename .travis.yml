@@ -20,18 +20,16 @@ install:
 script:
   - chmod +x script_run_docker.sh
   - ./script_run_docker.sh
-  - pytest -s -v test_delete.py
-  - ./script_run_docker.sh
   - pytest -s -v test_album.py
+  - pytest -s -v test_album_favorite.py
+  - pytest -s -v test_album_user.py
+  - pytest -s -v test_other.py
+  - ./script_run_docker.sh
+  - pytest -s -v test_delete.py
   - ./script_run_docker.sh
   - pytest -s -v test_sharing_with_album_token_no_permission.py
   - ./script_run_docker.sh
   - pytest -s -v test_sharing_with_album_token.py
   - ./script_run_docker.sh
   - pytest -s -v test_report_providers.py
-  - ./script_run_docker.sh
-  - pytest -s -v test_album_favorite.py
-  - ./script_run_docker.sh
-  - pytest -s -v test_album_user.py
-  - ./script_run_docker.sh
-  - pytest -s -v test_album_other.py
+  
