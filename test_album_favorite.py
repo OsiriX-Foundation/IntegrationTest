@@ -83,3 +83,6 @@ def test_remove_favorite_with_bad_album_id():
 
 def test_remove_favorite_with_not_user_member():
     rq_album.remove_favorite(env.env_var.get("USER_2_TOKEN"), env.env_var["ALBUM_ID_1"], status_code=404)
+    #remove all created albums
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
