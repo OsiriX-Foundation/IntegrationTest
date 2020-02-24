@@ -31,3 +31,7 @@ script:
   - pytest -s -v test_report_providers.py
   - ./script_run_docker.sh
   - pytest -s -v test_album_favorite.py
+  - ./script_run_docker.sh
+  - pytest -s -v test_album_user.py
+  - ./script_run_docker.sh
+  - pytest -s -v test_album_other.py

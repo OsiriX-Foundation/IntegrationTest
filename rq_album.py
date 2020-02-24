@@ -31,6 +31,18 @@ def edit(token, album_id, data, status_code=200):
         album = json.loads(response.content)
         return album
 
+def get_list_of_user(token, album_id, count=1, status_code=200):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
+    response = requests.get(request_url, headers=headers)
+    util.print_request("GET", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 200:
+        assert response.headers.get("X-Total-Count") == str(count)
+        albums = json.loads(response.content)
+        return albums
+
 def get_list(token, status_code=200, params={}, count=1):
     print()
     request_url = env.env_var.get("URL") + "/albums"
