@@ -31,19 +31,7 @@ def edit(token, album_id, data, status_code=200):
         album = json.loads(response.content)
         return album
 
-def get_list_of_user(token, album_id, count=1, status_code=200):
-    print()
-    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users"
-    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
-    response = requests.get(request_url, headers=headers)
-    util.print_request("GET", response, request_url)
-    assert response.status_code == status_code
-    if status_code == 200:
-        assert response.headers.get("X-Total-Count") == str(count)
-        albums = json.loads(response.content)
-        return albums
-
-def get_list(token, status_code=200, params={}, count=1):
+def get_list(token, album_id=None, status_code=200, params={}, count=1):
     print()
     request_url = env.env_var.get("URL") + "/albums"
     headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
@@ -87,6 +75,8 @@ def delete_all(token):
             delete(token, album['album_id']) 
             #if not in album, leave album (group)
 
+
+#################REQUEST WITH USER################################
 def add_user(token, album_id, user_id, status_code=201):
     print()
     request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users/" + user_id
@@ -94,6 +84,18 @@ def add_user(token, album_id, user_id, status_code=201):
     response = requests.put(request_url, headers=headers)
     util.print_request("PUT", response, request_url)
     assert response.status_code == status_code
+
+def get_list_of_user(token, album_id, count=1, status_code=200):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
+    response = requests.get(request_url, headers=headers)
+    util.print_request("GET", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 200:
+        assert response.headers.get("X-Total-Count") == str(count)
+        albums = json.loads(response.content)
+        return albums
 
 def remove_user(token, album_id, user_id, status_code=204):
     print()
@@ -103,6 +105,9 @@ def remove_user(token, album_id, user_id, status_code=204):
     util.print_request("DELETE", response, request_url)
     assert response.status_code == status_code
 
+
+
+#################REQUEST WITH FAVORITE################################
 def add_favorite(token, album_id, status_code=204):
     print()
     request_url = env.env_var.get("URL") + "/albums/" + album_id + "/favorites/"
