@@ -18,6 +18,7 @@ def test_get_token():
     env.env_var["USER_2_TOKEN"] = token
     token = util.get_token(username="tata", password="tata")
     env.env_var["USER_3_TOKEN"] = token
-
+"""
 def test_get_user_exist():
     users_list = rq_user.get(env.env_var["USER_1_TOKEN"], status_code=200, params={"reference":env.env_var["USER_1_MAIL"]})
+"""
