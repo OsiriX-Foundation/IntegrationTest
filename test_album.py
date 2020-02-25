@@ -98,7 +98,7 @@ def test_new_album_with_different_param():
     assert new_album["write_comments"]== True
 
 def test_get_albums_not_found():
-    rq_album.get(env.env_var.get("USER_1_TOKEN"), "1", 404)
+    rq_album.get(env.env_var.get("USER_1_TOKEN"),"1", params={}, status_code=404)
 
 ################EDIT ALBUM TEST##########################
 def test_edit_album():
