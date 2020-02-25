@@ -105,6 +105,13 @@ def remove_user(token, album_id, user_id, status_code=204):
     util.print_request("DELETE", response, request_url)
     assert response.status_code == status_code
 
+def upgrade_user_to_admin(token, album_id, user_id, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users/" + user_id + "/admin"
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.put(request_url, headers=headers)
+    util.print_request("PUT", response, request_url)
+    assert response.status_code == status_code
 
 
 #################REQUEST WITH FAVORITE################################
