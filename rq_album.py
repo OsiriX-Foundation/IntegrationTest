@@ -113,6 +113,14 @@ def upgrade_user_to_admin(token, album_id, user_id, status_code=204):
     util.print_request("PUT", response, request_url)
     assert response.status_code == status_code
 
+def downgrade_admin_to_user(token, album_id, user_id, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/users/" + user_id + "/admin"
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.delete(request_url, headers=headers)
+    util.print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
+
 
 #################REQUEST WITH FAVORITE################################
 def add_favorite(token, album_id, status_code=204):
