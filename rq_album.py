@@ -137,3 +137,28 @@ def remove_favorite(token, album_id, status_code=204):
     response = requests.delete(request_url, headers=headers)
     util.print_request("DELETE", response, request_url)
     assert response.status_code == status_code
+
+
+#################REQUEST WITH COMMENT################################
+def post_comment(token, album_id, data={"comment":"default comment"}, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/comments"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.post(request_url, headers=headers, data=util.urlencode(data))
+    util.print_request("POST", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 201:
+        album = json.loads(response.content)
+        return album
+
+def get_events(token, album_id, params={}, count=1, status_code=200):
+    print()
+    request_url = env.env_var.get("URL") + "/albums/" + album_id + "/events"
+    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
+    response = requests.get(request_url, headers=headers, params=params)
+    util.print_request("GET", response, request_url)
+    assert response.status_code == status_code
+    if status_code == 200:
+        assert response.headers.get("X-Total-Count") == str(count)
+        album = json.loads(response.content)
+        return album
