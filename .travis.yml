@@ -23,6 +23,7 @@ script:
   - pytest -s -v test_album.py
   - pytest -s -v test_album_favorite.py
   - pytest -s -v test_album_user.py
+  - pytest -s -v test_album_event.py
   - pytest -s -v test_other.py
   - ./script_run_docker.sh
   - pytest -s -v test_delete.py
