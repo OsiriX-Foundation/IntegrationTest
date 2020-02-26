@@ -21,6 +21,9 @@ def print_info(info):
     if env.env_var.get("PRINT_INFO"):
         print(info)
 
+def print_json(json_object):
+    json.dumps(json_object, indent=4, sort_keys=True)
+
 
 def stow(token, status_code = 200, file_name = "testStudy.dcm", params = {}):
     print()
