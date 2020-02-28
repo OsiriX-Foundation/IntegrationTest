@@ -6,7 +6,7 @@ import pytest
 import env
 import util
 import rq_album
-
+import rq_studies
 
 def test_init():
     env.initialize()
@@ -29,11 +29,11 @@ def test_new_album():
 def test_stow():
     print()
     params = {"album": env.env_var.get("ALBUM_ID")}
-    util.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
+    rq_studies.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
 
 def test_album_studies_list():
     params = {"album": env.env_var.get("ALBUM_ID")}
-    util.studies_list(token=env.env_var.get("USER_1_TOKEN"), params=params, count=1)
+    rq_studies.get_list(token=env.env_var.get("USER_1_TOKEN"), params=params, count=1)
 
 def test_get_report_provider_list_empty():
     util.report_provider_list(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var.get("ALBUM_ID"), count=0)
@@ -127,7 +127,6 @@ def test_metadata_report_provider_unvalid():
     assert metadata["valid"] == False
 
 def test_delete_all_album():
-    albums = rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"))
-    for album in albums:
-        if album["number_of_users"] == 1:
-            rq_album.delete(token=env.env_var.get("USER_1_TOKEN"), album_id=album["album_id"])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])

@@ -8,6 +8,7 @@ import pytest
 import env
 import util
 import rq_album
+import rq_studies
 
 def test_init():
     env.initialize()
@@ -27,15 +28,15 @@ def test_new_album():
 
 def test_stow():
     params = {"album": env.env_var.get("ALBUM_ID")}
-    util.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
+    rq_studies.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
 
 def test_album_studies_list():
     params = {"album": env.env_var.get("ALBUM_ID")}
-    util.studies_list(token=env.env_var.get("USER_1_TOKEN"), params=params, count=1)
+    rq_studies.get_list(token=env.env_var.get("USER_1_TOKEN"), params=params, count=1)
 
 def test_inbox_user1_studies_list_0():
     params = {"inbox": True}
-    util.studies_list(token=env.env_var.get("USER_1_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_1_TOKEN"), params=params, count=0)
 
 def test_create_capability_token():
     data={"title": "name", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": False, "download_permission": True, "write_permission": True}
@@ -52,28 +53,28 @@ def test_new_album_destination():
 
 def test_album_destination_studies_list():
     params = {"album": env.env_var.get("ALBUM_DESTINATION_ID")}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_inbox_user2_studies_list():
     params = {"inbox": True}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_send_with_token_to_an_album():
     util.share_series_in_album(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"), status_code=404)
 
 def test_album_destination_studies_list_0():
     params = {"album": env.env_var.get("ALBUM_DESTINATION_ID")}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_inbox_user2_studies_list_0():
     params = {"inbox": True}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_delete_album():
     rq_album.delete(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"))
 
 def test_user2_studies_list():
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 #########
 ### share with another album (study)
@@ -85,77 +86,82 @@ def test_new_album_destination_study():
 
 def test_album_destination_studies_list_study():
     params = {"album": env.env_var.get("ALBUM_DESTINATION_ID")}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_inbox_user2_studies_list_study():
     params = {"inbox": True}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_send_with_token_to_an_album_study():
     util.share_study_in_album(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"), status_code=403)
 
 def test_album_destination_studies_list_1_study():
     params = {"album": env.env_var.get("ALBUM_DESTINATION_ID")}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_inbox_user2_studies_list_0_study():
     params = {"inbox": True}
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), params=params, count=0)
 
 def test_delete_album_study():
     rq_album.delete(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_DESTINATION_ID"))
 
 def test_user2_studies_list_study():
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 #########
 ### share with another user (series)
 #########
 
 def test_user3_studies_list_0_series():
-    util.studies_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
 
 def test_send_with_token_to_user_3_series():
     util.share_series_with_user(token=env.env_var.get("CAPABILITY_TOKEN"), user="tata@gmail.com", studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=404)
 
 def test_user3_studies_list_1_series():
-    util.studies_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
 
 #########
 ### share with another user (study)
 #########
 
 def test_user3_studies_list_0_study():
-    util.studies_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
 
 def test_send_with_token_to_user_3_study():
     util.share_study_with_user(token=env.env_var.get("CAPABILITY_TOKEN"), user="tata@gmail.com", studies_UID=env.env_var.get("STUDY_UID"), status_code=403)
 
 def test_user3_studies_list_1_study():
-    util.studies_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_3_TOKEN"), count=0)
 
 #########
 ### appropriate with token (study)
 #########
 
 def test_user2_studies_list_0_appropriate_study():
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 def test_user2_appropriate_study():
     util.appropriate_study(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"), status_code=403)
 
 def test_user2_studies_list_1_appropriate_study():
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 #########
 ### appropriate with token (series)
 #########
 
 def test_user2_studies_list_0_appropriate_series():
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 def test_user2_appropriate_series():
     util.appropriate_series(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), X_Authorization_Source=env.env_var.get("CAPABILITY_TOKEN"), status_code=404)
 
 def test_user2_studies_list_1_appropriate_series():
-    util.studies_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
+
+def test_delete_all_album():
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])

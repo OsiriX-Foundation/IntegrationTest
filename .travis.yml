@@ -24,13 +24,14 @@ script:
   - pytest -s -v test_album_favorite.py
   - pytest -s -v test_album_user.py
   - pytest -s -v test_album_event.py
+  - pytest -s -v test_album_sharing.py
   - pytest -s -v test_other.py
-  - ./script_run_docker.sh
-  - pytest -s -v test_delete.py
-  - ./script_run_docker.sh
-  - pytest -s -v test_sharing_with_album_token_no_permission.py
-  - ./script_run_docker.sh
   - pytest -s -v test_sharing_with_album_token.py
-  - ./script_run_docker.sh
+  - pytest -s -v test_sharing_with_album_token_no_permission.py
   - pytest -s -v test_report_providers.py
+  - pytest -s -v test_delete.py
+  - pytest -s -v test_webhook.py
+  
+  
+  
   

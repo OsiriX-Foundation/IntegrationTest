@@ -8,6 +8,7 @@ import pytest
 import env
 import util
 import rq_album
+import rq_studies
 
 def test_init():
     env.initialize()
@@ -29,11 +30,11 @@ def test_new_album():
 
 def test_get_studies_list_from_user3():
     params = {"inbox": "true"}
-    util.studies_list(token=env.env_var.get("USER_3_TOKEN"),params=params, count=0)
+    rq_studies.get_list(token=env.env_var.get("USER_3_TOKEN"),params=params, count=0)
 
 def test_stow():
     params = {"album": env.env_var.get("ALBUM_ID")}
-    util.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
+    rq_studies.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
 
 def test_create_capability_token_read_only():
     data={"title": "title", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": False}
@@ -45,7 +46,7 @@ def test_send_with_token_to_user_3_study():
 
 def test_get_studies_list_from_album():
     params = {"album": env.env_var.get("ALBUM_ID")}
-    util.studies_list(token=env.env_var.get("USER_1_TOKEN"),params=params, count=1)
+    rq_studies.get_list(token=env.env_var.get("USER_1_TOKEN"),params=params, count=1)
 
 def test_create_capability_token_read_write():
     data={"title": "title", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": True}
@@ -54,3 +55,8 @@ def test_create_capability_token_read_write():
 
 def test_delete_with_token_read_write():
     util.delete_series_from_album(token=env.env_var.get("CAPABILITY_TOKEN_READ_WRITE"), album_id=env.env_var.get("ALBUM_ID"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=204)
+
+def test_delete_all_album():
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])

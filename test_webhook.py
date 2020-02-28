@@ -9,6 +9,7 @@ import env
 import util
 import pprint
 import rq_album
+import rq_studies
 
 def test_init():
     env.initialize()
@@ -73,3 +74,10 @@ def test_get_webhook2():
 #def test_stow():
 #    params = {"album": env.env_var.get("ALBUM_ID")}
 #    util.stow(token=env.env_var.get("USER_1_TOKEN"), params=params)
+
+
+def test_delete_all_album():
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])
+
