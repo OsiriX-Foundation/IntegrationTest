@@ -59,3 +59,8 @@ def test_share_study_in_album():
     rq_studies.add_in_album(env.env_var["USER_1_TOKEN"], params, env.env_var["STUDY_UID4_1"], env.env_var["ALBUM_ID_DEST"])
     rq_studies.get_list(token=env.env_var["USER_2_TOKEN"], params={"album": env.env_var["ALBUM_ID_DEST"]}, count=1)
     
+def test_delete_albums():
+    #delete use 1 albums
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+#def test_share_study_in inbox():
