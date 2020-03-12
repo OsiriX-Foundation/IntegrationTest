@@ -25,7 +25,7 @@ def test_get_token():
     env.env_var["USER_3_TOKEN"] = token
 
 def test_add_album_to_favorites():
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
     album = rq_album.create(token=env.env_var['USER_1_TOKEN'], data={"name":"new album favorite"})
     env.env_var["ALBUM_ID_1"]=album["album_id"]
     rq_album.add_favorite(env.env_var.get("USER_1_TOKEN"), env.env_var["ALBUM_ID_1"])
@@ -64,7 +64,7 @@ def test_add_bad_album_in_favorites():
 
 def test_user2_leaves_album():
     rq_album.remove_user(env.env_var.get("USER_2_TOKEN"), env.env_var['ALBUM_ID_1'],env.env_var.get("USER_2_MAIL"))
-    
+
     #check user 1 albums
     list_albums = rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"), params={}, count=2)
     assert list_albums[0]["album_id"] == env.env_var['ALBUM_ID_2']
@@ -84,5 +84,5 @@ def test_remove_favorite_with_bad_album_id():
 def test_remove_favorite_with_not_user_member():
     rq_album.remove_favorite(env.env_var.get("USER_2_TOKEN"), env.env_var["ALBUM_ID_1"], status_code=404)
     #remove all created albums
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])

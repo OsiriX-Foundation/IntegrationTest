@@ -21,7 +21,7 @@ def test_get_token():
 
 
 def test_get_list_of_user_in_albums():
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
     data = {"name":"ablum test user", "description":"desc test album user"}
     new_album = rq_album.create(token=env.env_var['USER_1_TOKEN'], data=data)
     env.env_var['ALBUM_ID_SHARED']=new_album["album_id"]
@@ -32,7 +32,7 @@ def test_get_list_of_user_in_albums():
     rq_album.add_user(token=env.env_var.get("USER_1_TOKEN"), album_id=env.env_var['ALBUM_ID_SHARED'], user_id=env.env_var.get("USER_3_MAIL"))
     rq_album.get_list_of_user(env.env_var['USER_1_TOKEN'], env.env_var['ALBUM_ID_SHARED'], count=3)
     user_in_album = rq_album.get_list_of_user(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_SHARED'], 3)
-    
+
     assert user_in_album[0]["email"] == env.env_var["USER_3_MAIL"]
     assert user_in_album[1]["email"] == env.env_var["USER_1_MAIL"]
     assert user_in_album[2]["email"] == env.env_var["USER_2_MAIL"]
@@ -90,8 +90,8 @@ def test_remove_user_in_album():
 
 def test_user_self_add_but_not_member():
     rq_album.add_user(env.env_var["USER_2_TOKEN"], env.env_var["ALBUM_ID_SHARED"], env.env_var["USER_2_MAIL"], status_code=404)
-    
-def test_add_user_in_album():    
+
+def test_add_user_in_album():
     rq_album.add_user(env.env_var["USER_1_TOKEN"], env.env_var["ALBUM_ID_SHARED"], env.env_var["USER_2_MAIL"], status_code=201)
     user_in_album = rq_album.get_list_of_user(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_SHARED'], count=3, status_code=200)
     assert user_in_album[0]["email"] == env.env_var["USER_3_MAIL"]
@@ -110,7 +110,7 @@ def test_that_the_user_not_admin_cannot_downgrade_admin():
     rq_album.downgrade_admin_to_user(token=env.env_var["USER_2_TOKEN"], album_id=env.env_var["ALBUM_ID_SHARED"], user_id=env.env_var["USER_1_MAIL"], status_code=403)
     rq_album.downgrade_admin_to_user(token=env.env_var["USER_3_TOKEN"], album_id=env.env_var["ALBUM_ID_SHARED"], user_id=env.env_var["USER_1_MAIL"], status_code=403)
 
-def test_add_user_directly_admin_in_album(): 
+def test_add_user_directly_admin_in_album():
     #remove user
     rq_album.remove_user(env.env_var["USER_1_TOKEN"], env.env_var["ALBUM_ID_SHARED"], env.env_var["USER_2_MAIL"], status_code=204)
     user_in_album = rq_album.get_list_of_user(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_SHARED'], count=2, status_code=200)
@@ -164,4 +164,3 @@ def test_add_bad_user():
 def test_that_all_user_quit_album():
     rq_album.remove_user(env.env_var["USER_2_TOKEN"], env.env_var["ALBUM_ID_SHARED"], env.env_var["USER_2_MAIL"], status_code=204)
     rq_album.remove_user(env.env_var["USER_3_TOKEN"], env.env_var["ALBUM_ID_SHARED"], env.env_var["USER_3_MAIL"], status_code=204)
-

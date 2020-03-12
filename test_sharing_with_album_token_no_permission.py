@@ -162,6 +162,6 @@ def test_user2_studies_list_1_appropriate_series():
     rq_studies.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
 
 def test_delete_all_album():
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])

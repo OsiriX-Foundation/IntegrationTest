@@ -57,6 +57,6 @@ def test_delete_with_token_read_write():
     util.delete_series_from_album(token=env.env_var.get("CAPABILITY_TOKEN_READ_WRITE"), album_id=env.env_var.get("ALBUM_ID"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"), status_code=204)
 
 def test_delete_all_album():
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])

@@ -21,9 +21,9 @@ def test_get_token():
     env.env_var["USER_3_TOKEN"] = token
 
 def test_create_new_album():
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])
 
     new_album = rq_album.create(token=env.env_var['USER_1_TOKEN'])
     env.env_var["ALBUM_ID_SOURCE"]=new_album["album_id"]
@@ -46,7 +46,7 @@ def test_studies_list():
 
 def test_create_new_album_where_share_studies():
     new_album = rq_album.create(token=env.env_var['USER_2_TOKEN'], data={"name":"share study"})
-    
+
     env.env_var["ALBUM_ID_DEST"]=new_album["album_id"]
     params = {"album": env.env_var["ALBUM_ID_DEST"]}
     #study is empty
@@ -58,9 +58,9 @@ def test_share_study_in_album():
     params = {"album": env.env_var["ALBUM_ID_SOURCE"]}
     rq_studies.add_in_album(env.env_var["USER_1_TOKEN"], params, env.env_var["STUDY_UID4_1"], env.env_var["ALBUM_ID_DEST"])
     rq_studies.get_list(token=env.env_var["USER_2_TOKEN"], params={"album": env.env_var["ALBUM_ID_DEST"]}, count=1)
-    
+
 def test_delete_albums():
     #delete use 1 albums
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
 #def test_share_study_in inbox():

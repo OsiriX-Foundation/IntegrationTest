@@ -127,6 +127,6 @@ def test_metadata_report_provider_unvalid():
     assert metadata["valid"] == False
 
 def test_delete_all_album():
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])

@@ -20,11 +20,11 @@ def test_get_token():
 #################### BASIC ALBUM TEST#############################
 def test_get_albums_empty_list():
     #Test with user 1
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
     list_albums= rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"), count=0)
     assert len(list_albums) == 0
     #Test with user 2
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
     list_albums= rq_album.get_list(token=env.env_var.get("USER_2_TOKEN"), count=0)
     assert len(list_albums) == 0
 
@@ -49,7 +49,7 @@ def test_new_album_limit_size_description():
     str_desc=''.join(random.choices(string.ascii_uppercase + string.digits, k=2049))
     data ={"name":"name", "description":str_desc}
     rq_album.create(token=env.env_var['USER_1_TOKEN'], data=data, status_code=400)
-   
+
 
 def test_new_album_contains_default_params():
     name = "a new album"
@@ -81,7 +81,7 @@ def test_new_album_with_different_param():
     assert new_album["delete_series"]== False
     assert new_album["add_series"]== False
     assert new_album["write_comments"]== False
-    
+
     #all parameters True
     name2 = "a new album2"
     description2 = "the album description2"
@@ -140,7 +140,7 @@ def test_add_user_in_album():
     album_added_in_album = False
     album_id_shared = env.env_var.get("ALBUM_ID_1")
     rq_album.add_user(token=env.env_var.get("USER_1_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
-    #add an album 
+    #add an album
     album_added = rq_album.create(token=env.env_var['USER_2_TOKEN'], data={"name":"my album"})
     #test if user2 contain album_id
     list_albums_user2= rq_album.get_list(token=env.env_var.get("USER_2_TOKEN"),count=2)
@@ -148,9 +148,9 @@ def test_add_user_in_album():
         if album['album_id']==album_id_shared:
             album_shared_in_album = True
         elif album['album_id']==album_added['album_id']:
-            album_added_in_album = True    
+            album_added_in_album = True
     assert album_shared_in_album
-    assert album_added_in_album 
+    assert album_added_in_album
 
 ################PERMISSION USER TEST################
 def test_edit_album_forbidden():
@@ -160,7 +160,7 @@ def test_edit_album_forbidden():
 def test_edit_album_notif_and_more_forbidden():
     data = {"name":"edit name","description":"edit desc","addUser":True, "downloadSeries":False, "sendSeries":False, "deleteSeries":True, "addSeries":False, "writeComments":False, "notificationNewSeries":False, "notificationNewComment":False}
     rq_album.edit(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID_1"), data=data,  status_code=403)
-    
+
 def test_edit_album_notif_ok():
     data = {"notificationNewSeries":False, "notificationNewComment":False}
     rq_album.edit(token=env.env_var.get("USER_2_TOKEN"), album_id=env.env_var.get("ALBUM_ID_1"), data=data)
@@ -170,7 +170,7 @@ def test_remove_user_in_album():
     album_shared_in_album= True
     rq_album.remove_user(token=env.env_var.get("USER_1_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
     list_albums_user2= rq_album.get_list(token=env.env_var.get("USER_2_TOKEN"),count=1)
-    #check that the album is no longer present in its list 
+    #check that the album is no longer present in its list
     for album in list_albums_user2:
         if album['album_id']==album_id_shared:
             album_shared_in_album = False
@@ -183,15 +183,15 @@ def test_user_self_deletes_from_the_album():
     rq_album.add_user(token=env.env_var.get("USER_1_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
     rq_album.remove_user(token=env.env_var.get("USER_2_TOKEN"), album_id=album_id_shared, user_id=env.env_var.get("USER_2_MAIL"))
     list_albums_user2= rq_album.get_list(token=env.env_var.get("USER_2_TOKEN"),count=1)
-    #check that the album is no longer present in its list 
+    #check that the album is no longer present in its list
     for album in list_albums_user2:
         if album['album_id']==album_id_shared:
-            
+
             album_shared_in_album = False
     assert album_shared_in_album
 
 ###################FILTER TEST#################################
-def test_get_album_list_filter_by_name():    
+def test_get_album_list_filter_by_name():
     name_filter="re edit name"
     list_albums = rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=1)
     assert list_albums[0]['name'] == name_filter
@@ -208,7 +208,7 @@ def test_get_album_list_filter_by_name():
     rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter_false}, count=0)
 
 
-def test_get_album_list_filter_by_name_starts_with_star():    
+def test_get_album_list_filter_by_name_starts_with_star():
     name_filter="*me"
     list_albums = rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=2)
     assert list_albums[0]['name'] == "filter by name"
@@ -216,7 +216,7 @@ def test_get_album_list_filter_by_name_starts_with_star():
     assert list_albums[0]['album_id'] == env.env_var["ALBUM_ID_5"]
     assert list_albums[1]['album_id'] == env.env_var["ALBUM_ID_1"]
 
-def test_get_album_list_filter_by_name_ends_with_star():    
+def test_get_album_list_filter_by_name_ends_with_star():
     name_filter="a new*"
     list_albums = rq_album.get_list(token=env.env_var.get("USER_1_TOKEN"), params={"name":name_filter}, count=3)
     assert list_albums[0]['name'] == "a new album2"

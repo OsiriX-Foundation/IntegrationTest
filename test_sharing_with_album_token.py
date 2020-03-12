@@ -7,7 +7,7 @@ import time
 import pytest
 import env
 import util
-import rq_album 
+import rq_album
 import rq_studies
 
 def test_init():
@@ -177,6 +177,6 @@ def test_remove_series_from_inbox_user_2_appropriate_series():
     util.delete_series_from_inbox(token=env.env_var.get("USER_2_TOKEN"), studies_UID=env.env_var.get("STUDY_UID"), series_UID=env.env_var.get("SERIES_UID"))
 
 def test_delete_all_album():
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])
+    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
+    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])
