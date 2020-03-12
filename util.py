@@ -183,6 +183,14 @@ def delete_series_from_inbox(token, studies_UID, series_UID, status_code=204):
     print_request("DELETE", response, request_url)
     assert response.status_code == status_code
 
+def delete_study_from_inbox(token, studies_UID, status_code=204):
+    print()
+    request_url = env.env_var.get("URL") + "/studies/"+studies_UID
+    headers = {"Authorization": "Bearer "+ token}
+    response = requests.delete(request_url, headers=headers)
+    print_request("DELETE", response, request_url)
+    assert response.status_code == status_code
+
 def delete_series_from_album(token, studies_UID, series_UID, album_id, status_code=204):
     print()
     request_url = env.env_var.get("URL") + "/studies/"+studies_UID+"/series/"+series_UID+"/albums/"+album_id

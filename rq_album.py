@@ -31,7 +31,7 @@ def edit(token, album_id, data, status_code=200):
         album = json.loads(response.content)
         return album
 
-def get_list(token, params={}, status_code=200, count=1):
+def get_list(token, params={}, status_code=200, count=-1):
     print()
     request_url = env.env_var.get("URL") + "/albums"
     headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
@@ -39,7 +39,8 @@ def get_list(token, params={}, status_code=200, count=1):
     util.print_request("GET", response, request_url)
     assert response.status_code == status_code
     if status_code == 200:
-        assert response.headers.get("X-Total-Count") == str(count)
+        if count != -1:
+            assert response.headers.get("X-Total-Count") == str(count)
         albums = json.loads(response.content)
         return albums
 
@@ -62,18 +63,15 @@ def delete(token, album_id, status_code=204):
     util.print_request("DELETE", response, request_url)
     assert response.status_code == status_code
 
-def delete_all(token):
+def delete_all(token, user_id):
     print()
-    request_url = env.env_var.get("URL") + "/albums"
-    headers = {"Authorization": "Bearer "+ token, "Accept": "application/json"}
-    response = requests.get(request_url, headers=headers, params={})
-    util.print_request("GET", response, request_url)
-    if response.status_code == 200:
-        list_albums = json.loads(response.content)
-        for album in list_albums:
-            #test if admin in album before delete
+    list_albums = get_list(token=token)
+    for album in list_albums:
+
+        if album['is_admin'] == True:
             delete(token, album['album_id']) 
-            #if not in album, leave album (group)
+        else:
+            remove_user(token=token, album_id= album['album_id'], user_id=user_id)
 
 
 #################REQUEST WITH USER################################

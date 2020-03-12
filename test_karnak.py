@@ -82,35 +82,36 @@ def test_create_album_C_token_w():
 #  Poster une etude dans l'album karnak avec le token R/W sur l'album karnak
 def test_stow_in_karnak():
     params = {"album": env.env_var["ALBUM_ID_KARNAK"]}
-    rq_studies.stow(token=env.env_var["TOKEN_RW_KARNAK"], file_name = "series/test1.dcm", params=params)
+    rq_studies.stow(token=env.env_var["TOKEN_RW_KARNAK"], file_name = "series/test1.dcm", params={})
     rq_studies.get_list(token=env.env_var['USER_KARNAK_TOKEN'], params=params, count=1)
+    rq_studies.get_list(token=env.env_var['USER_KARNAK_TOKEN'], params={'inbox':True}, count=0)
 
 #  Etape 2 :
 #  Partager l'etude avec l'album A en utilisant le token karnak R/W et le token W de l'album A
 #  Partager l'etude avec l'album B en utilisant le token karnak R/W et le token W de l'album B
 def test_send_to_album_A():
-    appropriate_series(token=env.env_var["TOKEN_W_ALBUM_A"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=env.env_var["TOKEN_RW_KARNAK"])
+    util.appropriate_series(token=env.env_var["TOKEN_W_ALBUM_A"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=env.env_var["TOKEN_RW_KARNAK"])
     params = {"album": env.env_var["ALBUM_ID_A"]}
     rq_studies.get_list(token=env.env_var['USER_1_TOKEN'], params=params, count=1)
+    rq_studies.get_list(token=env.env_var['USER_1_TOKEN'], params={'inbox':True}, count=0)
 
 def test_send_to_album_B():
-    appropriate_series(token=env.env_var["TOKEN_W_ALBUM_B"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=env.env_var["TOKEN_RW_KARNAK"])
+    util.appropriate_series(token=env.env_var["TOKEN_W_ALBUM_B"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=env.env_var["TOKEN_RW_KARNAK"])
     params = {"album": env.env_var["ALBUM_ID_B"]}
     rq_studies.get_list(token=env.env_var['USER_2_TOKEN'], params=params, count=1)
+    rq_studies.get_list(token=env.env_var['USER_2_TOKEN'], params={'inbox':True}, count=0)
 
 #  Etape 3 :
 #  L'utilisateur 3 va lui meme chercher l'etude dans l'album karnak pour la mettre dans son album
 def test_appropriate_from_karnak_album():
-    share_study_in_album_from_album(token=env.env_var['USER_3_TOKEN'], studies_UID=env.env_var['STUDY_UID1'], album_src_id=env.env_var['ALBUM_ID_KARNAK'], album_dst_id=env.env_var['ALBUM_ID_C'])
+    util.share_study_in_album_from_album(token=env.env_var['USER_3_TOKEN'], studies_UID=env.env_var['STUDY_UID1'], album_src_id=env.env_var['ALBUM_ID_KARNAK'], album_dst_id=env.env_var['ALBUM_ID_C'])
     params = {"album": env.env_var["ALBUM_ID_C"]}
     rq_studies.get_list(token=env.env_var['USER_3_TOKEN'], params=params, count=1)
+    rq_studies.get_list(token=env.env_var['USER_3_TOKEN'], params={'inbox':True}, count=0)
 
 
-
-
-
-def test_clean_kheops():
-    rq_album.delete_all(token=env.env_var['USER_1_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_2_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_3_TOKEN'])
-    rq_album.delete_all(token=env.env_var['USER_KARNAK_TOKEN'])
+#def test_clean_kheops():
+    #rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
+    #rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
+    #rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])
+    #rq_album.delete_all(token=env.env_var['USER_KARNAK_TOKEN'], user_id=env.env_var['USER_KARNAK_MAIL'])
