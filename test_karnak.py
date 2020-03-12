@@ -115,3 +115,8 @@ def test_clean_kheops():
     rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
     rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])
     rq_album.delete_all(token=env.env_var['USER_KARNAK_TOKEN'], user_id=env.env_var['USER_KARNAK_MAIL'])
+
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_1_TOKEN'])
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_1_TOKEN'])
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_1_TOKEN'])
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_1_TOKEN'])
