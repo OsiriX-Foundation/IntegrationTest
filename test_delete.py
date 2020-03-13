@@ -9,6 +9,7 @@ import env
 import util
 import rq_album
 import rq_studies
+import rq_capability_token
 
 def test_init():
     env.initialize()
@@ -38,7 +39,7 @@ def test_stow():
 
 def test_create_capability_token_read_only():
     data={"title": "title", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": False}
-    capability_token = util.new_token(token=env.env_var.get("USER_1_TOKEN"), data=data)
+    capability_token = rq_capability_token.create(token=env.env_var.get("USER_1_TOKEN"), data=data)
     env.env_var["CAPABILITY_TOKEN_READ_ONLY"] = capability_token["secret"]
 
 def test_send_with_token_to_user_3_study():
@@ -50,7 +51,7 @@ def test_get_studies_list_from_album():
 
 def test_create_capability_token_read_write():
     data={"title": "title", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": True}
-    capability_token = util.new_token(token=env.env_var.get("USER_1_TOKEN"), data=data)
+    capability_token = rq_capability_token.create(token=env.env_var.get("USER_1_TOKEN"), data=data)
     env.env_var["CAPABILITY_TOKEN_READ_WRITE"] = capability_token["secret"]
 
 def test_delete_with_token_read_write():

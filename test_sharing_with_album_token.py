@@ -9,6 +9,7 @@ import env
 import util
 import rq_album
 import rq_studies
+import rq_capability_token
 
 def test_init():
     env.initialize()
@@ -40,7 +41,7 @@ def test_inbox_user1_studies_list_0():
 
 def test_create_capability_token():
     data={"title": "name", "scope_type": "album", "album": env.env_var.get("ALBUM_ID"), "read_permission": True, "appropriate_permission": True, "download_permission": False, "write_permission": False}
-    capability_token = util.new_token(token=env.env_var.get("USER_1_TOKEN"), data=data)
+    capability_token = rq_capability_token.create(token=env.env_var.get("USER_1_TOKEN"), data=data)
     env.env_var["CAPABILITY_TOKEN"] = capability_token["secret"]
 
 #########
