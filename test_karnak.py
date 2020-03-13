@@ -45,7 +45,7 @@ def test_create_karnak_album():
 
 def test_create_karnak_token_r_w():
     data = {"title":"karnak token read write", "scope_type":"album", "album":env.env_var['ALBUM_ID_KARNAK'], "read_permission":True, "appropriate_permission":True, "download_permission":False, "write_permission":True}
-    new_token = util.new_token(token=env.env_var['USER_KARNAK_TOKEN'], data=data)
+    new_token = rq_capability_token.create(token=env.env_var['USER_KARNAK_TOKEN'], data=data)
     env.env_var["TOKEN_RW_KARNAK"]=new_token["secret"]
 
 def test_create_album_A():
@@ -55,7 +55,7 @@ def test_create_album_A():
 
 def test_create_album_A_token_w():
     data = {"title":"album A token write only", "scope_type":"album", "album":env.env_var['ALBUM_ID_A'], "read_permission":False, "write_permission":True}
-    new_token = util.new_token(token=env.env_var['USER_1_TOKEN'], data=data)
+    new_token = rq_capability_token.create(token=env.env_var['USER_1_TOKEN'], data=data)
     env.env_var["TOKEN_W_ALBUM_A"]=new_token["secret"]
 
 def test_create_album_B():
@@ -65,7 +65,7 @@ def test_create_album_B():
 
 def test_create_album_B_token_w():
     data = {"title":"album B token write only", "scope_type":"album", "album":env.env_var['ALBUM_ID_B'], "read_permission":False, "write_permission":True}
-    new_token = util.new_token(token=env.env_var['USER_2_TOKEN'], data=data)
+    new_token = rq_capability_token.create(token=env.env_var['USER_2_TOKEN'], data=data)
     env.env_var["TOKEN_W_ALBUM_B"]=new_token["secret"]
 
 def test_create_album_C():
@@ -75,7 +75,7 @@ def test_create_album_C():
 
 def test_create_album_C_token_w():
     data = {"title":"album C token write only", "scope_type":"album", "album":env.env_var['ALBUM_ID_C'], "read_permission":False, "write_permission":True}
-    new_token = util.new_token(token=env.env_var['USER_3_TOKEN'], data=data)
+    new_token = rq_capability_token.create(token=env.env_var['USER_3_TOKEN'], data=data)
     env.env_var["TOKEN_W_ALBUM_C"]=new_token["secret"]
 
 karnak_var={}

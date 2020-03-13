@@ -109,23 +109,6 @@ def delete_report_provider(token, client_id, album_id, status_code=204):
     assert response.status_code == status_code
 
 
-
-################################################################
-# CAPABILITIES TOKENS
-################################################################
-
-def new_token(token, data, status_code=201):
-    print()
-    request_url = env.env_var.get("URL") + "/capabilities"
-    headers = {"Authorization": "Bearer "+ token, "Content-Type": "application/x-www-form-urlencoded"}
-    response = requests.post(request_url, headers=headers, data=urlencode(data))
-    print_request("POST", response, request_url)
-    assert response.status_code == status_code
-    if status_code == 201:
-        reportprovider = json.loads(response.content)
-        return reportprovider
-
-
 ################################################################
 # SERIES & STUDIES
 ################################################################
