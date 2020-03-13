@@ -9,6 +9,7 @@ import env
 import util
 import rq_album
 import rq_studies
+import rq_capability_token
 
 
 def test_init():
@@ -77,12 +78,48 @@ def test_create_album_C_token_w():
     new_token = util.new_token(token=env.env_var['USER_3_TOKEN'], data=data)
     env.env_var["TOKEN_W_ALBUM_C"]=new_token["secret"]
 
+karnak_var={}
+def test_set_karnak_variables():
+    karnak_var["karnak_token"] = env.env_var["TOKEN_RW_KARNAK"]
+    karnak_var["a_token"] = env.env_var["TOKEN_W_ALBUM_A"]
+    karnak_var["b_token"] = env.env_var["TOKEN_W_ALBUM_B"]
+    karnak_var["c_token"] = env.env_var["TOKEN_W_ALBUM_C"]
+
+#  Validation des tokens
+def test_karnak_capability_token():
+    token_karnak = rq_capability_token.introspect(karnak_var["karnak_token"])
+    assert token_karnak["active"] == True
+    assert "read" in token_karnak["scope"]
+    assert "write" in token_karnak["scope"]
+    assert "send" in token_karnak["scope"]
+    assert token_karnak["album_id"] == env.env_var["ALBUM_ID_KARNAK"]
+
+def test_album_a_capability_token():
+    token_karnak = rq_capability_token.introspect(karnak_var["a_token"])
+    assert token_karnak["active"] == True
+    assert "write" in token_karnak["scope"]
+    assert token_karnak["album_id"] == env.env_var["ALBUM_ID_A"]
+
+def test_album_b_capability_token():
+    token_karnak = rq_capability_token.introspect(karnak_var["b_token"])
+    assert token_karnak["active"] == True
+    assert "write" in token_karnak["scope"]
+    assert token_karnak["album_id"] == env.env_var["ALBUM_ID_B"]
+
+def test_album_c_capability_token():
+    token_karnak = rq_capability_token.introspect(karnak_var["c_token"])
+    assert token_karnak["active"] == True
+    assert "write" in token_karnak["scope"]
+    assert token_karnak["album_id"] == env.env_var["ALBUM_ID_C"]
+
 
 #  Etape 1 :
 #  Poster une etude dans l'album karnak avec le token R/W sur l'album karnak
-def test_stow_in_karnak():
+def test_stow_in_karnak_album():
+    rq_studies.stow(token=karnak_var["karnak_token"], file_name = "series/test1.dcm", params={})
+
+    #validation
     params = {"album": env.env_var["ALBUM_ID_KARNAK"]}
-    rq_studies.stow(token=env.env_var["TOKEN_RW_KARNAK"], file_name = "series/test1.dcm", params={})
     rq_studies.get_list(token=env.env_var['USER_KARNAK_TOKEN'], params=params, count=1)
     rq_studies.get_list(token=env.env_var['USER_KARNAK_TOKEN'], params={'inbox':True}, count=0)
 
@@ -90,13 +127,17 @@ def test_stow_in_karnak():
 #  Partager l'etude avec l'album A en utilisant le token karnak R/W et le token W de l'album A
 #  Partager l'etude avec l'album B en utilisant le token karnak R/W et le token W de l'album B
 def test_send_to_album_A():
-    util.appropriate_series(token=env.env_var["TOKEN_W_ALBUM_A"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=env.env_var["TOKEN_RW_KARNAK"])
+    util.appropriate_series(token=karnak_var["a_token"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=karnak_var["karnak_token"])
+
+    #validation
     params = {"album": env.env_var["ALBUM_ID_A"]}
     rq_studies.get_list(token=env.env_var['USER_1_TOKEN'], params=params, count=1)
     rq_studies.get_list(token=env.env_var['USER_1_TOKEN'], params={'inbox':True}, count=0)
 
 def test_send_to_album_B():
-    util.appropriate_series(token=env.env_var["TOKEN_W_ALBUM_B"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=env.env_var["TOKEN_RW_KARNAK"])
+    util.appropriate_series(token=karnak_var["b_token"], studies_UID=env.env_var["STUDY_UID1"], series_UID=env.env_var["SERIES_UID1"], X_Authorization_Source=karnak_var["karnak_token"])
+
+    #validation
     params = {"album": env.env_var["ALBUM_ID_B"]}
     rq_studies.get_list(token=env.env_var['USER_2_TOKEN'], params=params, count=1)
     rq_studies.get_list(token=env.env_var['USER_2_TOKEN'], params={'inbox':True}, count=0)
