@@ -21,6 +21,11 @@ def test_get_token():
     token = util.get_token(username="tata", password="tata")
     env.env_var["USER_3_TOKEN"] = token
 
+def test_register():
+    util.register(token=env.env_var['USER_1_TOKEN'])
+    util.register(token=env.env_var['USER_2_TOKEN'])
+    util.register(token=env.env_var['USER_3_TOKEN'])
+
 def test_new_album():
     print()
     album=rq_album.create(token=env.env_var.get("USER_1_TOKEN"))

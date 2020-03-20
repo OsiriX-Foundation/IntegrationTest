@@ -17,6 +17,11 @@ def test_get_token():
     token = util.get_token(username="tata", password="tata")
     env.env_var["USER_3_TOKEN"] = token
 
+def test_register():
+    util.register(token=env.env_var['USER_1_TOKEN'])
+    util.register(token=env.env_var['USER_2_TOKEN'])
+    util.register(token=env.env_var['USER_3_TOKEN'])
+
 #################### BASIC ALBUM TEST#############################
 def test_get_albums_empty_list():
     #Test with user 1

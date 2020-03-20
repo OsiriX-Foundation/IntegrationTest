@@ -28,6 +28,10 @@ def test_get_token():
     token = util.get_token(username="karnak", password="karnak")
     env.env_var["USER_KARNAK_TOKEN"] = token
 
+def test_register():
+    util.register(token=env.env_var['USER_1_TOKEN'])
+    util.register(token=env.env_var['USER_2_TOKEN'])
+    util.register(token=env.env_var['USER_3_TOKEN'])
 
 #  Initialisation :
 #  Creation d'un album Karnk avec un admin (Karnak) et 3 utilisateurs (user 1, 2 et 3) + un token read write pour karnak

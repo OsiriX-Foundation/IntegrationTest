@@ -41,6 +41,21 @@ def get_token(username, password, realm="travis", client_id="loginConnect"):
     token_response = json.loads(response.content)
     return token_response["access_token"]
 
+def register(token, realm="travis"):
+    well_known_url = "https://keycloak.kheops.online/auth/realms/"+str(realm)+"/.well-known/openid-configuration"
+    response = requests.get(well_known_url)
+    assert response.status_code == 200
+    well_known = json.loads(response.content)
+    assert "userinfo_endpoint" in well_known
+
+    userinfo_endpoint = well_known["userinfo_endpoint"]
+
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    data = {"access_token": token}
+    response = requests.post(userinfo_endpoint, headers=headers, data=data)
+    token_response = json.loads(response.content)
+    return token_response
+
 ################################################################
 # REPORT PROVIDER
 ################################################################

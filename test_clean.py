@@ -27,6 +27,10 @@ def test_get_token():
     token = util.get_token(username="karnak", password="karnak")
     env.env_var["USER_KARNAK_TOKEN"] = token
 
+def test_register():
+    util.register(token=env.env_var['USER_1_TOKEN'])
+    util.register(token=env.env_var['USER_2_TOKEN'])
+    util.register(token=env.env_var['USER_3_TOKEN'])
 
 def test_clean_kheops():
     rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
