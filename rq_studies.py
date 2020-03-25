@@ -17,14 +17,18 @@ def get_list(token, params={}, count=-1):
     util.print_request("GET", response, request_url)
     if count > 0:
         assert response.status_code == 200
-        if count != -1:
-            assert response.headers.get("X-Total-Count") == str(count)
+        assert response.headers.get("X-Total-Count") == str(count)
         studiesList = json.loads(response.content)
         return studiesList
+    elif count == 0:
+        assert response.status_code == 204
+        assert response.headers.get("X-Total-Count") == str(count)
     else:
-        if count == 0:
-            assert response.status_code == 204
-            assert response.headers.get("X-Total-Count") == str(count)
+        assert response.status_code == 200 or 204
+        if int(response.headers.get("X-Total-Count")) != 0:
+            print(response.content)
+            studiesList = json.loads(response.content)
+            return studiesList
 
 def stow(token, file_name = "series/test1.dcm", params = {}, status_code = 200):
     print()
