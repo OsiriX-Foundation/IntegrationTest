@@ -4,6 +4,7 @@ import env
 import util
 import random
 import string
+import rq_studies
 
 
 def test_init():

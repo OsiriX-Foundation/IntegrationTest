@@ -4,6 +4,7 @@ import env
 import util
 import random
 import string
+import rq_studies
 
 
 def test_init():
@@ -23,7 +24,7 @@ def test_register():
     util.register(token=env.env_var['USER_1_TOKEN'])
     util.register(token=env.env_var['USER_2_TOKEN'])
     util.register(token=env.env_var['USER_3_TOKEN'])
-    
+
 """
 def test_get_user_exist():
     users_list = rq_user.get(env.env_var["USER_1_TOKEN"], status_code=200, params={"reference":env.env_var["USER_1_MAIL"]})

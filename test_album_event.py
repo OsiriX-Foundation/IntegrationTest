@@ -5,6 +5,7 @@ import util
 import random
 import string
 import json
+import rq_studies
 
 def test_init():
     env.initialize()

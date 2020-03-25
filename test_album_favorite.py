@@ -8,6 +8,7 @@ import pytest
 import env
 import util
 import rq_album
+import rq_studies
 
 
 def test_init():
