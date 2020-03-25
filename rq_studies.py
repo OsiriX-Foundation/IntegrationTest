@@ -26,7 +26,6 @@ def get_list(token, params={}, count=-1):
     else:
         assert response.status_code == 200 or 204
         if int(response.headers.get("X-Total-Count")) != 0:
-            print(response.content)
             studiesList = json.loads(response.content)
             return studiesList
 
