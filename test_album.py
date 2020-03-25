@@ -321,3 +321,8 @@ def test_delete_albums():
     #delete user 2 albums
     list_albums= rq_album.get_list(token=env.env_var.get("USER_2_TOKEN"), count=1)
     rq_album.delete(token=env.env_var.get("USER_2_TOKEN"), album_id=list_albums[0]["album_id"], status_code=204)
+
+def test_clean_all_inbox():
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_1_TOKEN'])
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_2_TOKEN'])
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_3_TOKEN'])

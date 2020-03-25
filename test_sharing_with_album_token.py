@@ -186,3 +186,8 @@ def test_delete_all_album():
     rq_album.delete_all(token=env.env_var['USER_1_TOKEN'], user_id=env.env_var['USER_1_MAIL'])
     rq_album.delete_all(token=env.env_var['USER_2_TOKEN'], user_id=env.env_var['USER_2_MAIL'])
     rq_album.delete_all(token=env.env_var['USER_3_TOKEN'], user_id=env.env_var['USER_3_MAIL'])
+
+def test_clean_all_inbox():
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_1_TOKEN'])
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_2_TOKEN'])
+    rq_studies.delete_all_from_inbox(token=env.env_var['USER_3_TOKEN'])
