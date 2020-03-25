@@ -75,6 +75,10 @@ services:
     image: osirixfoundation/kheops-authorization:${KHEOPS_AUTHORIZATION_IMAGE_TAG}
     restart: on-failure
     env_file: docker-compose.env
+    environment:
+      - JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8089"
+    ports:
+      - "8089:8089"
     depends_on:
       - auth-db
       - arc
