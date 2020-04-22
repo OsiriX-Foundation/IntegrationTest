@@ -36,8 +36,8 @@ def test_get_events_mutation_when_create_album():
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], count=1, status_code=200)
     assert events_list[0]["event_type"] == "Mutation"
     assert events_list[0]["mutation_type"] == "CREATE_ALBUM"
-    assert events_list[0]["origin"]["email"] == env.env_var["USER_1_MAIL"]
-    assert events_list[0]["origin"]["can_access"] == True
+    assert events_list[0]["source"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[0]["source"]["can_access"] == True
 
 def test_post_comment_in_album():
     env.env_var["COMMENT_1"] = "first_comment"
@@ -47,8 +47,8 @@ def test_get_comment_in_album():
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], count=2, status_code=200)
     assert events_list[0]["event_type"] == "Comment"
     assert events_list[0]["comment"] == env.env_var["COMMENT_1"]
-    assert events_list[0]["origin"]["email"] == env.env_var["USER_1_MAIL"]
-    assert events_list[0]["origin"]["can_access"] == True
+    assert events_list[0]["source"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[0]["source"]["can_access"] == True
     assert events_list[1]["event_type"] == "Mutation"
     assert events_list[1]["mutation_type"] == "CREATE_ALBUM"
     assert events_list[1]["origin"]["email"] == env.env_var["USER_1_MAIL"]
@@ -59,8 +59,8 @@ def test_add_user_in_album_and_get_mutation():
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], count=3, status_code=200)
     assert events_list[0]["event_type"] == "Mutation"
     assert events_list[0]["mutation_type"] == "ADD_USER"
-    assert events_list[0]["origin"]["email"] == env.env_var["USER_1_MAIL"]
-    assert events_list[0]["origin"]["can_access"] == True
+    assert events_list[0]["source"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[0]["source"]["can_access"] == True
     assert events_list[0]["target"]["email"] == env.env_var["USER_2_MAIL"]
     assert events_list[0]["target"]["can_access"] == True
     assert events_list[1]["event_type"] == "Comment"
@@ -74,7 +74,7 @@ def test_edit_album_and_get_mutation():
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], count=4, status_code=200)
     assert events_list[0]["mutation_type"] == "EDIT_ALBUM"
     assert events_list[1]["mutation_type"] == "ADD_USER"
-    assert events_list[1]["origin"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[1]["source"]["email"] == env.env_var["USER_1_MAIL"]
     assert events_list[1]["target"]["email"] == env.env_var["USER_2_MAIL"]
     assert events_list[2]["comment"] == env.env_var["COMMENT_1"]
     assert events_list[3]["mutation_type"] == "CREATE_ALBUM"
@@ -87,8 +87,8 @@ def test_get_comment_with_other_user_in_album():
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], count=5, status_code=200)
     assert events_list[0]["event_type"] == "Comment"
     assert events_list[0]["comment"] == env.env_var["COMMENT_2"]
-    assert events_list[0]["origin"]["email"] == env.env_var["USER_2_MAIL"]
-    assert events_list[0]["origin"]["can_access"] == True
+    assert events_list[0]["source"]["email"] == env.env_var["USER_2_MAIL"]
+    assert events_list[0]["source"]["can_access"] == True
 
 def test_post_comment_with_other_user_that_not_in_album():
     rq_album.post_comment(env.env_var["USER_3_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], data={"comment":"other user not in album comment" }, status_code=404)
@@ -107,25 +107,25 @@ def test_admin_have_permission_to_write_comment():
     rq_album.post_comment(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], data={"comment":env.env_var["COMMENT_3"] }, status_code=204)
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], count=7, status_code=200)
     assert events_list[0]["comment"] == env.env_var["COMMENT_3"]
-    assert events_list[0]["origin"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[0]["source"]["email"] == env.env_var["USER_1_MAIL"]
 
 def test_get_comments_by_user():
     params={"types":"comments"}
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'],params=params, count=3, status_code=200)
     assert events_list[0]["comment"] == env.env_var["COMMENT_3"]
-    assert events_list[0]["origin"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[0]["source"]["email"] == env.env_var["USER_1_MAIL"]
     assert events_list[1]["comment"] == env.env_var["COMMENT_2"]
-    assert events_list[1]["origin"]["email"] == env.env_var["USER_2_MAIL"]
+    assert events_list[1]["source"]["email"] == env.env_var["USER_2_MAIL"]
     assert events_list[2]["comment"] == env.env_var["COMMENT_1"]
-    assert events_list[2]["origin"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[2]["source"]["email"] == env.env_var["USER_1_MAIL"]
 
     events_list = rq_album.get_events(env.env_var["USER_2_TOKEN"], env.env_var['ALBUM_ID_COMMENT'],params=params, count=3, status_code=200)
     assert events_list[0]["comment"] == env.env_var["COMMENT_3"]
-    assert events_list[0]["origin"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[0]["source"]["email"] == env.env_var["USER_1_MAIL"]
     assert events_list[1]["comment"] == env.env_var["COMMENT_2"]
-    assert events_list[1]["origin"]["email"] == env.env_var["USER_2_MAIL"]
+    assert events_list[1]["source"]["email"] == env.env_var["USER_2_MAIL"]
     assert events_list[2]["comment"] == env.env_var["COMMENT_1"]
-    assert events_list[2]["origin"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[2]["source"]["email"] == env.env_var["USER_1_MAIL"]
 
 def test_get_comments_limit_by_user():
     limit = 2
