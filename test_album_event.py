@@ -51,8 +51,8 @@ def test_get_comment_in_album():
     assert events_list[0]["source"]["can_access"] == True
     assert events_list[1]["event_type"] == "Mutation"
     assert events_list[1]["mutation_type"] == "CREATE_ALBUM"
-    assert events_list[1]["origin"]["email"] == env.env_var["USER_1_MAIL"]
-    assert events_list[1]["origin"]["can_access"] == True
+    assert events_list[1]["source"]["email"] == env.env_var["USER_1_MAIL"]
+    assert events_list[1]["source"]["can_access"] == True
 
 def test_add_user_in_album_and_get_mutation():
     rq_album.add_user(env.env_var["USER_1_TOKEN"], env.env_var["ALBUM_ID_COMMENT"], env.env_var["USER_2_MAIL"], status_code=201)
