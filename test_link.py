@@ -31,7 +31,7 @@ def test_get_usertoken():
     env.env_var["USER_TOKEN"]=new_token["secret"]
 
 def test_stow():
-    rq_studies.stow(token=env.env_var.get("USER_1_TOKEN"), link=True)
+    rq_studies.stow(token=env.env_var.get("USER_TOKEN"), link=True)
 
 
 
