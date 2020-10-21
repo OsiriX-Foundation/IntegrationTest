@@ -29,10 +29,16 @@ def get_list(token, params={}, count=-1):
             studiesList = json.loads(response.content)
             return studiesList
 
-def stow(token, file_name = "series/test1.dcm", params = {}, status_code = 200):
+def stow(token, file_name = "series/test1.dcm", params = {}, status_code = 200, link=False):
     print()
-    request_url = env.env_var.get("URL") + "/studies"
-    headers = {"Authorization": "Bearer "+ token, "Content-Type": "multipart/related; type=\"application/dicom\"; boundary=myboundary"}
+    request_url = ""
+    headers = {}
+    if link:
+        request_url = env.env_var.get("URL") + "/link/" + token + "/studies"
+        headers = {"Content-Type": "multipart/related; type=\"application/dicom\"; boundary=myboundary"}
+    else:
+        request_url = env.env_var.get("URL") + "/studies"
+        headers = {"Authorization": "Bearer "+ token, "Content-Type": "multipart/related; type=\"application/dicom\"; boundary=myboundary"}
     files = {'file': open(file_name, 'rb')}
     response = requests.post(request_url, headers=headers, files=files, params=params)
     util.print_request("POST", response, request_url)

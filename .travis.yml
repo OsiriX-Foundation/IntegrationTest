@@ -23,6 +23,7 @@ script:
   - chmod +x script_run_docker.sh
   - ./script_run_docker.sh
   - pytest -s -v test_karnak.py
+  - pytest -s -v test_link.py
   - pytest -s -v test_album.py
   - pytest -s -v test_album_favorite.py
   - pytest -s -v test_album_user.py
