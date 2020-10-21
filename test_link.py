@@ -4,6 +4,7 @@ import util
 import random
 import string
 import rq_studies
+import rq_capability_token
 
 def test_init():
     env.initialize()
@@ -28,7 +29,7 @@ def test_get_usertoken():
     data = {"title":"karnak token read write", "scope_type":"user"}
     new_token = rq_capability_token.create(token=env.env_var['USER_1_TOKEN'], data=data)
     env.env_var["USER_TOKEN"]=new_token["secret"]
-    
+
 def test_stow():
     rq_studies.stow(token=env.env_var.get("USER_1_TOKEN"), link=True)
 
