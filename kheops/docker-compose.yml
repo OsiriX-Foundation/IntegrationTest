@@ -76,7 +76,7 @@
   
     kheops-authorization:
       container_name: kheopsauthorization
-      image: osirixfoundation/kheops-authorization:debug
+      image: osirixfoundation/kheops-authorization:master
       env_file: docker-compose.env
       environment:
         KHEOPS_OIDC_PROVIDER: https://keycloak.kheops.online/auth/realms/travis
