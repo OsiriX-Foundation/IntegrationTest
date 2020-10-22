@@ -34,6 +34,7 @@ def test_get_events_mutation_when_create_album():
     new_album = rq_album.create(token=env.env_var['USER_1_TOKEN'], data=data)
     env.env_var["ALBUM_ID_COMMENT"]=new_album["album_id"]
     events_list = rq_album.get_events(env.env_var["USER_1_TOKEN"], env.env_var['ALBUM_ID_COMMENT'], count=1, status_code=200)
+    print(events_list)
     assert events_list[0]["event_type"] == "Mutation"
     assert events_list[0]["mutation_type"] == "CREATE_ALBUM"
     assert events_list[0]["source"]["email"] == env.env_var["USER_1_MAIL"]
