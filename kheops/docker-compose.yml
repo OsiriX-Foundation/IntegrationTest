@@ -1,181 +1,188 @@
-version: '3.1'
-#https://github.com/docker-library/postgres/issues/151
-services:
-
-  ldap:
-    container_name: pacsldap
-    image: dcm4che/slapd-dcm4chee:${PACS_LDAP_IMAGE_TAG}
-    env_file: docker-compose.env
-    volumes:
-      - dcm4chee-ldap-ldap:/var/lib/ldap
-      - dcm4chee-ldap-slapdd:/etc/ldap/slapd.d
-    restart: on-failure
-
-  pacsdb:
-    container_name: pacsdb
-    image: dcm4che/postgres-dcm4chee:${PACS_PSQL_IMAGE_TAG}
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-    environment:
-      - POSTGRES_DB=pacsdb
-      - POSTGRES_USER=pacs
-      - POSTGRES_PASSWORD_FILE=/run/secrets/kheops_pacsdb_pass
-    volumes:
-      - dcm4chee-db-data:/var/lib/postgresql/data
-    secrets:
-      - kheops_pacsdb_pass
-    restart: on-failure
-
-  auth-db:
-    container_name: authdb
-    image: postgres:${KHEOPS_AUTHORIZATION_PSQL_DATABASE_IMAGE_TAG}
-    volumes:
-      - kheops-db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=kheops
-      - POSTGRES_USER=kheopsuser
-      - POSTGRES_PASSWORD_FILE=/run/secrets/kheops_authdb_pass
-    secrets:
-      - kheops_authdb_pass
-    restart: on-failure
-    
-  arc:
-    container_name: pacsarc
-    image: dcm4che/dcm4chee-arc-psql:${KHEOPS_ARC_IMAGE_TAG}
-    ports:
-      - "8080:8080"
-      - "8443:8443"
-      - "9990:9990"
-      - "8787:8787"
-      - "11112:11112"
-      - "2575:2575"
-    env_file: docker-compose.env
-    environment:
-      WILDFLY_CHOWN: /storage /opt/wildfly/standalone
-      WILDFLY_WAIT_FOR: ldap:389 pacsdb:5432
-      JAVA_OPTS: -Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n
-      POSTGRES_DB: pacsdb
-      POSTGRES_USER: pacs
-      POSTGRES_PASSWORD_FILE: /run/secrets/kheops_pacsdb_pass
-      POSTGRES_HOST: pacsdb
-    secrets:
-      - kheops_pacsdb_pass
-    depends_on:
-      - ldap
-      - pacsdb
-    volumes:
-      - dcm4chee-arc-wildfly:/opt/wildfly/standalone
-      - /dcm4chee-arc/storage:/storage
-    restart: on-failure
-
-  kheops-authorization:
-    container_name: kheopsauthorization
-    image: osirixfoundation/kheops-authorization:${KHEOPS_AUTHORIZATION_IMAGE_TAG}
-    restart: on-failure
-    env_file: docker-compose.env
-    environment:
-      - JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8089"
-    ports:
-      - "8089:8089"
-    depends_on:
-      - auth-db
-      - arc
-    secrets:
-      - kheops_superuser_hmasecret
-      - kheops_auth_hmasecret
-      - kheops_authdb_pass
-      - kheops_keycloak_clientsecret
-      - kheops_client_dicomwebproxysecret
-      - kheops_client_zippersecret
-      - kheops_metric_ressource_password
-
-  kheops-zipper:
-    container_name: kheopszipper
-    image: osirixfoundation/kheops-zipper:${KHEOPS_ZIPPER_IMAGE_TAG}
-    restart: on-failure
-    env_file: docker-compose.env
-    depends_on:
-      - arc
-    secrets:
-      - kheops_client_zippersecret
-
-  kheops-ui:
-    container_name: kheopsui
-    image: osirixfoundation/kheops-ui:${KHEOPS_UI_IMAGE_TAG}
-    env_file: docker-compose.env
-    restart: on-failure
-    depends_on:
-      - kheops-authorization
-      - arc
-
-  kheops-dicomweb-proxy:
-    container_name: kheopsdicomwebproxy
-    image: osirixfoundation/kheops-dicomweb-proxy:${KHEOPS_DICOMWEB_PROXY_IMAGE_TAG}
-    restart: on-failure
-    env_file: docker-compose.env
-    ports:
-      - "8049:8080"
-    depends_on:
-      - kheops-authorization
-      - arc
-    secrets:
-      - kheops_auth_hmasecret_post
-      - kheops_client_dicomwebproxysecret
-
-  kheops-reverse-proxy:
-    image: osirixfoundation/kheops-reverse-proxy:${KHEOPS_REVERSE_PROXY_IMAGE_TAG}
-    container_name: kheopsreverseproxy
-    env_file: docker-compose.env
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8042:8042"
-      - "8048:8048"
-    depends_on:
-      - kheops-authorization
-      - kheops-dicomweb-proxy
-      - arc
-      - pacs-authorization-proxy
-#    extra_hosts:
-#      - "${ROOT_URL}:127.0.0.1"
-
-  pacs-authorization-proxy:
-    container_name: pacsauthorizationproxy
-    env_file: docker-compose.env
-    image: osirixfoundation/pacs-authorization-proxy:${PACS_AUTHORIZATION_PROXY_IMAGE_TAG}
-    ports:
-      - "82:80"
-    depends_on:
-      - arc
-    secrets:
-      - kheops_auth_hmasecret
-      - kheops_auth_hmasecret_post
-
-secrets:
-  kheops_pacsdb_pass:
-    file: ${SECRETS_PATH}/kheops_pacsdb_pass
-  kheops_authdb_pass:
-    file: ${SECRETS_PATH}/kheops_authdb_pass
-  kheops_superuser_hmasecret:
-    file: ${SECRETS_PATH}/kheops_superuser_hmasecret
-  kheops_auth_hmasecret:
-    file: ${SECRETS_PATH}/kheops_auth_hmasecret
-  kheops_auth_hmasecret_post:
-    file: ${SECRETS_PATH}/kheops_auth_hmasecret_post
-  kheops_keycloak_clientsecret:
-    file: ${SECRETS_PATH}/kheops_keycloak_clientsecret
-  kheops_client_dicomwebproxysecret:
-    file: ${SECRETS_PATH}/kheops_client_dicomwebproxysecret
-  kheops_client_zippersecret:
-    file: ${SECRETS_PATH}/kheops_client_zippersecret
-  kheops_metric_ressource_password:
-    file: ${SECRETS_PATH}/kheops_metric_ressource_password
-
-volumes:
-  dcm4chee-ldap-ldap:
-  dcm4chee-ldap-slapdd:
-  dcm4chee-db-data:
-  dcm4chee-arc-wildfly:
-  kheops-db-data:
+---
+  version: "3.1"
+  services:
+  
+  # DCM4CHEE uses the an LDAP server for configuration, as per the DICOM 
+  # Application Configuration Management Profile. For this installation
+  # we do not apply any custom configuration to DCM4CEE
+    ldap:
+      container_name: ldap
+      image: dcm4che/slapd-dcm4chee:2.4.48-22.2
+      env_file: docker-compose.env
+      networks:
+        - pacs_network
+  
+  # DCM4CHEE uses this PostgreSQL database
+    pacs-postgres:
+      container_name: pacspostgres
+      image: dcm4che/postgres-dcm4chee:12.2-22
+      logging:
+        driver: json-file
+        options:
+          max-size: "10m"
+      environment:
+        POSTGRES_DB: kheops_pacs
+        POSTGRES_USER: kheops_pacs
+        POSTGRES_PASSWORD_FILE: /run/secrets/kheops_pacsdb_pass
+      env_file: docker-compose.env
+      volumes:
+        - dcm4chee-db-data:/var/lib/postgresql/data
+      secrets:
+        - kheops_pacsdb_pass
+      networks:
+        - pacs_network
+  
+  # The main DCM4CHEE container
+    pacs-arc:
+      container_name: pacsarc
+      image: dcm4che/dcm4chee-arc-psql:5.22.2
+      env_file: docker-compose.env
+      environment:
+        POSTGRES_DB: kheops_pacs
+        POSTGRES_USER: kheops_pacs
+        POSTGRES_PASSWORD_FILE: /run/secrets/kheops_pacsdb_pass
+        STORAGE_DIR: /storage/fs1
+        POSTGRES_HOST: pacspostgres
+        WILDFLY_CHOWN: /storage /opt/wildfly/standalone
+        WILDFLY_WAIT_FOR: ldap:389 pacspostgres:5432
+        JAVA_OPTS: -Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true
+      secrets:
+        - kheops_pacsdb_pass
+      depends_on:
+        - ldap
+        - pacs-postgres
+      volumes:
+        - dcm4chee-arc-wildfly:/opt/wildfly/standalone
+        - dcm4chee-arc-storage:/storage
+      networks:
+        - pacs_network
+  
+  # KHEOPS persists all data to this PostgreSQL database
+    kheops-postgres:
+      container_name: kheopspostgres
+      image: postgres:12.1-alpine
+      volumes:
+        - kheops-db-data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: kheops
+        POSTGRES_USER: kheopsuser
+        POSTGRES_PASSWORD_FILE: /run/secrets/kheops_authdb_pass
+      ports:
+        - "5432:5432"
+      secrets:
+        - kheops_authdb_pass
+      networks:
+        - kheops_network
+  
+    kheops-authorization:
+      container_name: kheopsauthorization
+      image: osirixfoundation/kheops-authorization:debug
+      env_file: docker-compose.env
+      environment:
+        KHEOPS_OIDC_PROVIDER: https://keycloak.kheops.online/auth/realms/travis
+        CATALINA_OPTS: -Duser.timezone=UTC
+        JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8089"
+      ports:
+        - "8089:8089"
+      depends_on:
+        - kheops-postgres
+      secrets:
+        - kheops_auth_hmasecret
+        - kheops_authdb_pass
+        - kheops_client_dicomwebproxysecret
+        - kheops_client_zippersecret
+      networks:
+        - kheops_network
+  #    volumes:
+  #      - ./logging.properties:/usr/local/tomcat/conf/logging.properties
+  
+    kheops-zipper:
+      container_name: kheopszipper
+      image: osirixfoundation/kheops-zipper:v0.9.5
+      env_file: docker-compose.env
+      secrets:
+        - kheops_client_zippersecret
+      networks:
+        - kheops_network
+  
+    kheops-ui:
+      container_name: kheopsui
+      image: osirixfoundation/kheops-ui:webhook_new_event
+      env_file: docker-compose.env
+      networks:
+        - frontend_network
+  
+    kheops-dicomweb-proxy:
+      container_name: kheopsdicomwebproxy
+      image: osirixfoundation/kheops-dicomweb-proxy:v0.9.5
+      env_file: docker-compose.env
+      secrets:
+        - kheops_auth_hmasecret_post
+        - kheops_client_dicomwebproxysecret
+      networks:
+        - kheops_network
+  
+    kheops-reverse-proxy:
+      #image: osirixfoundation/kheops-reverse-proxy:v0.9.5-insecure
+      #image: osirixfoundation/kheops-reverse-proxy:test
+      image: osirixfoundation/kheops-reverse-proxy:ci-test-one_branche
+      #image: osirixfoundation/kheops-reverse-proxy:ci-test
+      container_name: kheopsreverseproxy
+      env_file: docker-compose.env
+      ports:
+        - "80:8042"
+      depends_on:
+        - kheops-authorization
+        - kheops-dicomweb-proxy
+        - kheops-ui
+        - kheops-zipper
+      networks:
+        - kheops_network
+        - frontend_network
+  
+    pacs-authorization-proxy:
+      container_name: pacsauthorizationproxy
+      env_file: docker-compose.env
+      image: osirixfoundation/pacs-authorization-proxy:v0.9.5
+      depends_on:
+        - pacs-arc
+      secrets:
+        - kheops_auth_hmasecret
+        - kheops_auth_hmasecret_post
+      networks:
+        - pacs_network
+        - kheops_network
+  
+  secrets:
+    kheops_authdb_pass:
+      file: secrets/kheops_authdb_pass
+    kheops_pacsdb_pass:
+      file: secrets/kheops_pacsdb_pass
+    kheops_auth_hmasecret:
+      file: secrets/kheops_auth_hmasecret
+    kheops_auth_hmasecret_post:
+      file: secrets/kheops_auth_hmasecret_post
+    kheops_client_dicomwebproxysecret:
+      file: secrets/kheops_client_dicomwebproxysecret
+    kheops_client_zippersecret:
+      file: secrets/kheops_client_zippersecret
+  
+  volumes:
+    dcm4chee-db-data:
+    dcm4chee-arc-wildfly:
+    dcm4chee-arc-storage:
+    kheops-db-data:
+  
+  networks:
+  # Network used for communication between the backend KHEOPS components
+    kheops_network:
+      driver: bridge
+  # The PACS network isolates the PACS from the reset of KHEOPS ensuring that
+  # all communication between KHEOPS and the PACS goes the the authorization
+  # proxy.
+    pacs_network:
+      driver: bridge
+  # network reserved for communication with the frontend UI.
+    frontend_network:
+      driver: bridge
+  
