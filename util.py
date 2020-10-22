@@ -26,8 +26,8 @@ def print_json(json_object):
 
 
 
-def get_token(username, password, realm="travis", client_id="loginConnect"):
-    well_known_url = "https://keycloak.kheops.online/auth/realms/"+str(realm)+"/.well-known/openid-configuration"
+def get_token(username, password, client_id="loginConnect"):
+    well_known_url = env.env_var.get("KEYCLOAK_URL") + env.env_var.get("KEYCLOAK_REALM") + "/.well-known/openid-configuration"
     response = requests.get(well_known_url)
     assert response.status_code == 200
     well_known = json.loads(response.content)

@@ -2,10 +2,16 @@
 import os
 
 __TRAVIS_URL="http://localhost:8042/api"
+__TRAVIS_KEYCLOAK_URL="https://keycloak.kheops.online/auth/realms/"
+__TRAVIS_KEYCLOAK_REALM="travis"
 #__TEST2_URL="http://localhost:8042/api"
 #__TEST2_URL="https://test.kheops.online/api"
-__TEST2_URL="http://192.168.67.221:8042/api"
+#__TEST2_URL="http://192.168.67.221:8042/api"
 #__TEST2_URL="http://localhost:7575"
+__TEST2_URL="http://localhost:80/api"
+__KEYCLOAK_URL="http://localhost:8080/auth/realms/"
+__KEYCLOAK_REALM="travis"
+__KEYCLOAK_REALM="kheops"
 __STUDY_UID = "2.16.840.1.113669.632.20.1211.10000314223"
 __SERIES_UID = "1.3.12.2.1107.5.1.4.48545.30000006100307470634300004693"
 __PRINT_INFO = False
@@ -36,8 +42,12 @@ def initialize():
     env_var = {}
     if "TRAVIS" in os.environ:
         env_var["URL"] = __TRAVIS_URL
+        env_var["KEYCLOAK_URL"] = __TRAVIS_KEYCLOAK_URL
+        env_var["KEYCLOAK_REALM"] = __TRAVIS_KEYCLOAK_REALM
     else:
         env_var["URL"] = __TEST2_URL
+        env_var["KEYCLOAK_URL"] = __KEYCLOAK_URL
+        env_var["KEYCLOAK_REALM"] = __KEYCLOAK_REALM
 
     env_var["STUDY_UID"] = __STUDY_UID
     env_var["SERIES_UID"] = __SERIES_UID
