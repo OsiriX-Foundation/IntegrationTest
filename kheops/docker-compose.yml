@@ -137,6 +137,8 @@
       networks:
         - kheops_network
         - frontend_network
+      extra_hosts:
+        - "localhost:127.0.0.1"
   
     pacs-authorization-proxy:
       container_name: pacsauthorizationproxy
