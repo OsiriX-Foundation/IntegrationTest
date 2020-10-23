@@ -48,7 +48,7 @@ def test_create_capability_token_read_only():
     env.env_var["CAPABILITY_TOKEN_READ_ONLY"] = capability_token["secret"]
 
 def test_send_with_token_to_user_3_study():
-    util.share_study_with_user(token=env.env_var.get("CAPABILITY_TOKEN_READ_ONLY"), user="3685d976-f1d6-443c-95d4-95ee4b749878", studies_UID=env.env_var.get("STUDY_UID"))
+    util.share_study_with_user(token=env.env_var.get("CAPABILITY_TOKEN_READ_ONLY"), user=env.env_var["USER_3_MAIL"], studies_UID=env.env_var.get("STUDY_UID"))
 
 def test_get_studies_list_from_album():
     params = {"album": env.env_var.get("ALBUM_ID")}
