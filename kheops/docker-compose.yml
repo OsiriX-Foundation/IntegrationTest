@@ -2,6 +2,27 @@
   version: "3.1"
   services:
   
+    keycloak:
+      image: jboss/keycloak:9.0.3
+      container_name: keycloak
+      command: ["-b", "0.0.0.0"]
+      ports:
+        - "8080:8080"
+      environment:
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD_FILE: /run/secrets/keycloak_admin_password
+        KEYCLOAK_IMPORT: /tmp/kheops-realm.json
+  # In this configuration, users of the Web UI will access KHEOPS and be
+  # redirected to Keycloak using the frontend URL 
+        KEYCLOAK_FRONTEND_URL: http://127.0.0.1:8080/auth
+      volumes:
+        - keycloak-standalone-data:/opt/jboss/keycloak/standalone/data
+        - ./realm/kheops-realm.json:/tmp/kheops-realm.json:cached
+        - ./themes/kheops:/opt/jboss/keycloak/themes/kheops:cached
+      secrets:
+        - keycloak_admin_password
+      networks:
+        - keycloak_network
   # DCM4CHEE uses the an LDAP server for configuration, as per the DICOM 
   # Application Configuration Management Profile. For this installation
   # we do not apply any custom configuration to DCM4CEE
@@ -79,7 +100,7 @@
       image: osirixfoundation/kheops-authorization:master
       env_file: docker-compose.env
       environment:
-        KHEOPS_OIDC_PROVIDER: https://keycloak.kheops.online/auth/realms/travis
+        KHEOPS_OIDC_PROVIDER: http://keycloak:8080/auth/realms/kheops
         CATALINA_OPTS: -Duser.timezone=UTC
         JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8089"
       ports:
@@ -93,6 +114,7 @@
         - kheops_client_zippersecret
       networks:
         - kheops_network
+        - keycloak_network
   
     kheops-zipper:
       container_name: kheopszipper
@@ -154,6 +176,8 @@
         - kheops_network
   
   secrets:
+    keycloak_admin_password:
+      file: secrets/keycloak_admin_password
     kheops_authdb_pass:
       file: secrets/kheops_authdb_pass
     kheops_pacsdb_pass:
@@ -168,6 +192,7 @@
       file: secrets/kheops_client_zippersecret
   
   volumes:
+    keycloak-standalone-data:
     dcm4chee-db-data:
     dcm4chee-arc-wildfly:
     dcm4chee-arc-storage:
@@ -185,4 +210,7 @@
   # network reserved for communication with the frontend UI.
     frontend_network:
       driver: bridge
-  
+  # Network for the backend communication between the KHEOPS Authorization
+  # Server and Keycloak.
+    keycloak_network:
+      driver: bridge

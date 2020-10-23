@@ -24,10 +24,43 @@ def print_info(info):
 def print_json(json_object):
     print(json.dumps(json_object, indent=4, sort_keys=True))
 
+def add_user_keycloak(admin_username, admin_password, user_name, user_firstname, user_mail, user_username, user_password):
 
+    well_known_url = env.env_var.get("KEYCLOAK_URL") + "/auth/realms/master" + "/.well-known/openid-configuration"
+    response = requests.get(well_known_url)
+    assert response.status_code == 200
+    well_known = json.loads(response.content)
+    assert "token_endpoint" in well_known
+
+    token_endpoint = well_known["token_endpoint"]
+
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    data = {"grant_type": "password", "username": admin_username, "password": admin_password, "client_id":"admin-cli"}
+    response = requests.post(token_endpoint, headers=headers, data=data)
+    token_response = json.loads(response.content)
+    admin_token = token_response["access_token"]
+    
+    create_user_url = env.env_var.get("KEYCLOAK_URL") +"/auth/admin/realms/"+ env.env_var.get("KEYCLOAK_REALM") + "/users"
+    headers = {"Content-Type": "application/json;charset=UTF-8", "Authorization": "Bearer " + admin_token}
+    data = {"enabled":True, "attributes":{}, "username":user_username, "emailVerified":True,"email":user_mail, "firstName":user_firstname, "lastName":user_name}
+    data = json.dumps(data)
+    response = requests.post(create_user_url, headers=headers, data=data)
+    assert response.status_code == 201 or 409
+
+    if "Location" in response.headers.keys():
+        reset_password_url = response.headers["Location"] + "/reset-password"
+        headers = {"Content-Type": "application/json;charset=UTF-8", "Authorization": "Bearer " + admin_token}
+        data = {"type":"password", "value":user_password, "temporary":False}
+        data = json.dumps(data)
+        response = requests.put(reset_password_url, headers=headers, data=data)
+        assert response.status_code == 204
+    else:
+        print("user already exist")
+        print(response.content)
+        
 
 def get_token(username, password, client_id="loginConnect"):
-    well_known_url = env.env_var.get("KEYCLOAK_URL") + env.env_var.get("KEYCLOAK_REALM") + "/.well-known/openid-configuration"
+    well_known_url = env.env_var.get("KEYCLOAK_URL") + "/auth/realms/" + env.env_var.get("KEYCLOAK_REALM") + "/.well-known/openid-configuration"
     response = requests.get(well_known_url)
     assert response.status_code == 200
     well_known = json.loads(response.content)

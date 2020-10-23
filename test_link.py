@@ -9,7 +9,7 @@ import rq_capability_token
 def test_init():
     env.initialize()
     print()
-
+    
 def test_get_token():
     print()
     token = util.get_token(username="titi", password="titi")
