@@ -4,5 +4,5 @@ cd kheops
 docker-compose down -v
 docker-compose up -d
 cd ..
-sleep 60
+sleep 80
 docker ps -a
