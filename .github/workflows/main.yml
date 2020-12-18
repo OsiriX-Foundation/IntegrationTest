@@ -32,13 +32,10 @@ jobs:
           #python -m pip install --upgrade pip
           pip3 install -r requirements.txt
           pip3 list
-          
-      - name: Python Pylin GitHub Action
-        uses: fylein/python-pytest-github-action@v1
-        with:
-           args: pip3 install -r requirements.txt && pytest -s -v test_album.py
+
       #- uses: cclauss/GitHub-Action-for-pytest@0.5.0
       - name: run test
-        run: pytest -s -v test_register_in_keycloak.py
+        run: python3 print(str(2+3))
+        #run: pytest -s -v test_register_in_keycloak.py
       - name: run test2
         run: pytest -s -v test_album.py
