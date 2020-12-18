@@ -24,10 +24,10 @@ jobs:
         run: chmod +x script_run_docker.sh
       - name: Run2
         run: ./script_run_docker.sh
-      - name: install python and pytest 
+      - uses: actions/setup-python@v2
         with:
           python-version: 3.6
-      - name: Install dependencies
+      - name: install python and pytest 
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
