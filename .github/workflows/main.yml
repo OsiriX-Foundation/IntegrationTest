@@ -34,7 +34,6 @@ jobs:
       - name: run test
         run: | 
           pytest -s -v test_register_in_keycloak.py
-          pytest -s -v test_register_in_keycloak.py
           pytest -s -v test_karnak.py
           pytest -s -v test_link.py
           pytest -s -v test_album.py
