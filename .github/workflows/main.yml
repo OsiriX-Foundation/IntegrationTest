@@ -32,6 +32,20 @@ jobs:
 
       #- uses: cclauss/GitHub-Action-for-pytest@0.5.0
       - name: run test
-        run: pytest -s -v test_register_in_keycloak.py
-      - name: run test2
-        run: pytest -s -v test_album.py
+        run: | 
+          pytest -s -v test_register_in_keycloak.py
+          pytest -s -v test_register_in_keycloak.py
+          pytest -s -v test_karnak.py
+          pytest -s -v test_link.py
+          pytest -s -v test_album.py
+          pytest -s -v test_album_favorite.py
+          pytest -s -v test_album_user.py
+          pytest -s -v test_album_event.py
+          pytest -s -v test_album_sharing.py
+          pytest -s -v test_other.py
+          pytest -s -v test_sharing_with_album_token.py
+          pytest -s -v test_sharing_with_album_token_no_permission.py
+          pytest -s -v test_report_providers.py
+          pytest -s -v test_delete.py
+          pytest -s -v test_webhook.py
+
