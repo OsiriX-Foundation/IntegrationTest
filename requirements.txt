@@ -28,7 +28,6 @@ MarkupSafe==1.0
 mccabe==0.6.1
 numpy==1.16.4
 oauthlib==2.0.6
-PAM==0.4.2
 pluggy==0.6.0
 py==1.5.2
 pyasn1==0.4.2
