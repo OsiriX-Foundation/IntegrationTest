@@ -21,21 +21,20 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run1
-        run: chmod +x script_run_docker.sh
-      #- name: Run2
-      #  run: ./script_run_docker.sh
+        run: | 
+         chmod +x script_run_docker.sh
+         ./script_run_docker.sh
       - uses: actions/setup-python@v2
         with:
           python-version: 3.6
       - name: install python and pytest 
         run: |
-          #python -m pip install --upgrade pip
           pip3 install -r requirements.txt
           pip3 list
+      #python -m pip install --upgrade pip
 
       #- uses: cclauss/GitHub-Action-for-pytest@0.5.0
       - name: run test
-        run: python3 print(str(2+3))
-        #run: pytest -s -v test_register_in_keycloak.py
+        run: pytest -s -v test_register_in_keycloak.py
       - name: run test2
         run: pytest -s -v test_album.py
