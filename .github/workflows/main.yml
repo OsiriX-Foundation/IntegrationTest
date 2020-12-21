@@ -15,7 +15,6 @@ jobs:
         with:
           fetch-depth: 0
 
-       Runs a set of commands using the runners shell
       - name: Run Kheops on docker
         run: | 
          chmod +x script_run_docker.sh
