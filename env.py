@@ -41,8 +41,8 @@ __SERIES_UID5 = "1.3.12.2.1107.5.2.13.20561.30000005042216091690600001946"
 def initialize():
     global env_var
     env_var = {}
-    print(os.environ)
-    if "TRAVIS" in os.environ:
+
+    if "GITHUB_REPOSITORY" in os.environ:
         env_var["URL"] = __TRAVIS_URL
         env_var["KEYCLOAK_URL"] = __TRAVIS_KEYCLOAK_URL
         env_var["KEYCLOAK_REALM"] = __TRAVIS_KEYCLOAK_REALM
