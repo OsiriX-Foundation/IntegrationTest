@@ -51,7 +51,7 @@ python-crontab==2.3.8
 python-dateutil==2.8.0
 python-debian==0.1.32
 pyxdg==0.25
-PyYAML==3.12
+PyYAML==5.1
 requests==2.18.4
 requests-unixsocket==0.1.5
 SecretStorage==2.3.1
