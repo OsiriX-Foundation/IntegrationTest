@@ -20,14 +20,19 @@ jobs:
         run: | 
          chmod +x script_run_docker.sh
          ./script_run_docker.sh
-         
-         
-      - name: GitHub Action for pytest
-        uses: cclauss/GitHub-Action-for-pytest@0.5.0
+           
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Install python and pytest 
+        run: |
+          python -m pip install --upgrade pip
+          pip3 install -r requirements.txt
 
 
       #- uses: cclauss/GitHub-Action-for-pytest@0.5.0
-      - name: run test
+      - name: Run test
         run: | 
           pytest -s -v test_register_in_keycloak.py
           pytest -s -v test_karnak.py
