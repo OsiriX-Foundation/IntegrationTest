@@ -20,6 +20,7 @@ jobs:
         run: | 
          chmod +x script_run_docker.sh
          ./script_run_docker.sh
+         docker logs kheopsreverseproxy
            
       - uses: actions/setup-python@v2
         with:
