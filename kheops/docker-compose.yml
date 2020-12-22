@@ -156,6 +156,7 @@
         - kheops-dicomweb-proxy
         - kheops-ui
         - kheops-zipper
+        - pacs-authorization-proxy
       networks:
         - kheops_network
         - frontend_network
