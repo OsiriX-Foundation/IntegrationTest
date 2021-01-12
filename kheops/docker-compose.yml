@@ -97,7 +97,8 @@
   
     kheops-authorization:
       container_name: kheopsauthorization
-      image: osirixfoundation/kheops-authorization:dev
+      #image: osirixfoundation/kheops-authorization:dev
+      image: osirixfoundation/kheops-authorization:remove_JOOQ
       env_file: docker-compose.env
       environment:
         KHEOPS_OIDC_PROVIDER: http://keycloak:8080/auth/realms/kheops
