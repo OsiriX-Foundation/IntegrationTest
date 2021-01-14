@@ -1,6 +1,5 @@
 import os
 import requests
-import numpy
 from requests.auth import AuthBase
 import json
 import urllib
