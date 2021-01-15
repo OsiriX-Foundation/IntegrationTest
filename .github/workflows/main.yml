@@ -33,6 +33,7 @@ jobs:
       - name: Run test_karnak
         run: pytest -s -v test_karnak.py
       - name: Run test_link
+        if: ${{ failure() }}
         run: pytest -s -v test_link.py
       - name: Run test_album
         run: pytest -s -v test_album.py
