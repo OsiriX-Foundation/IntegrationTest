@@ -54,6 +54,7 @@ def test_create_karnak_token_r_w():
     env.env_var["TOKEN_RW_KARNAK"]=new_token["secret"]
 
 def test_create_album_A():
+    assert False == True
     data = {"name":"album A"}
     new_album = rq_album.create(token=env.env_var['USER_1_TOKEN'], data=data)
     env.env_var["ALBUM_ID_A"]=new_album["album_id"]
