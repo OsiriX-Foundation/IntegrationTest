@@ -31,30 +31,42 @@ jobs:
       - name: Run test_register_in_keycloak
         run: pytest -s -v test_register_in_keycloak.py
       - name: Run test_karnak
+        if: ${{ always() }}
         run: pytest -s -v test_karnak.py
       - name: Run test_link
-        if: ${{ failure() }}
+        if: ${{ always() }}
         run: pytest -s -v test_link.py
       - name: Run test_album
+        if: ${{ always() }}
         run: pytest -s -v test_album.py
       - name: Run test_album_favorite
+        if: ${{ always() }}
         run: pytest -s -v test_album_favorite.py
       - name: Run test_album_user
+        if: ${{ always() }}
         run: pytest -s -v test_album_user.py
       - name: Run test_album_event
+        if: ${{ always() }}
         run: pytest -s -v test_album_event.py
       - name: Run test_album_sharing
+        if: ${{ always() }}
         run: pytest -s -v test_album_sharing.py
       - name: Run test_other
+        if: ${{ always() }}
         run: pytest -s -v test_other.py
       - name: Run test_sharing_with_album_token
+        if: ${{ always() }}
         run: pytest -s -v test_sharing_with_album_token.py
       - name: Run test_sharing_with_album_token_no_permission
+        if: ${{ always() }}
         run: pytest -s -v test_sharing_with_album_token_no_permission.py
       - name: Run test_report_providers
+        if: ${{ always() }}
         run: pytest -s -v test_report_providers.py
       - name: Run test_delete
+        if: ${{ always() }}
         run: pytest -s -v test_delete.py
       - name: Run test_webhook
+        if: ${{ always() }}
         run: pytest -s -v test_webhook.py
 
