@@ -1,7 +1,7 @@
 
 import os
 
-__TRAVIS_URL="http://localhost:8042/api"
+__TRAVIS_URL="http://localhost:80/api"
 __TRAVIS_KEYCLOAK_URL="http://localhost:8080"
 __TRAVIS_KEYCLOAK_REALM="kheops"
 #__TEST2_URL="http://localhost:8042/api"
