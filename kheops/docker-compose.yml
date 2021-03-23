@@ -136,7 +136,8 @@
   
     kheops-dicomweb-proxy:
       container_name: kheopsdicomwebproxy
-      image: osirixfoundation/kheops-dicomweb-proxy:v0.9.5
+      #image: osirixfoundation/kheops-dicomweb-proxy:v0.9.5
+      image: osirixfoundation/kheops-dicomweb-proxy:upgrade_dependencies
       env_file: docker-compose.env
       secrets:
         - kheops_auth_hmasecret_post
