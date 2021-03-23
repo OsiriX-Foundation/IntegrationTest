@@ -147,7 +147,7 @@
     kheops-reverse-proxy:
       #image: osirixfoundation/kheops-reverse-proxy:v0.9.5-insecure
       #image: osirixfoundation/kheops-reverse-proxy:test
-      image: osirixfoundation/kheops-reverse-proxy:one_branche-ci-test
+      image: osirixfoundation/kheops-reverse-proxy:main-ci-test
       #image: osirixfoundation/kheops-reverse-proxy:ci-test
       container_name: kheopsreverseproxy
       env_file: docker-compose.env
