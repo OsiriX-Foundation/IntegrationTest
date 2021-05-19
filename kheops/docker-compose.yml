@@ -100,7 +100,8 @@
       #image: osirixfoundation/kheops-authorization:dev
       #image: osirixfoundation/kheops-authorization:remove_JOOQ
       #image: osirixfoundation/kheops-authorization:upgrade_dependencies
-      image: osirixfoundation/kheops-authorization:authorizationdev
+      #image: osirixfoundation/kheops-authorization:authorizationdev
+      image: osirixfoundation/kheops-authorization:authorization_remove_JOOQ
       env_file: docker-compose.env
       environment:
         KHEOPS_OIDC_PROVIDER: http://keycloak:8080/auth/realms/kheops
