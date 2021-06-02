@@ -29,7 +29,7 @@ pyOpenSSL==20.0.1
 pyparsing==2.4.2
 pyserial==3.4
 pytest==3.3.2
-requests==2.20.0
+requests==2.25.1
 requests-unixsocket==0.1.5
 service-identity==16.0.0
 setuptools==41.0.1
