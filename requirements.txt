@@ -20,7 +20,7 @@ pbr==5.0.0
 pip==19.1.1
 pipenv==2018.11.26
 pluggy==0.6.0
-py==1.7.0
+py==1.10.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
@@ -34,7 +34,7 @@ requests-unixsocket==0.1.5
 service-identity==16.0.0
 setuptools==41.0.1
 six==1.11.0
-urllib3==1.24.2
+urllib3==1.26.5
 virtualenv==16.0.0
 virtualenv-clone==0.4.0
 wcwidth==0.1.7
