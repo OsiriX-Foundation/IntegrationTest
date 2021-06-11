@@ -40,7 +40,6 @@ def test_stow():
     rq_studies.stow(token=env.env_var["USER_1_TOKEN"], file_name = "series/test2.dcm", params=params)
     rq_studies.stow(token=env.env_var["USER_1_TOKEN"], file_name = "series/test3.dcm", params=params)
     rq_studies.stow(token=env.env_var["USER_1_TOKEN"], file_name = "series/test4.dcm", params=params)
-    rq_studies.stow(token=env.env_var["USER_1_TOKEN"], file_name = "series/test4_1.dcm", params=params)
     rq_studies.stow(token=env.env_var["USER_1_TOKEN"], file_name = "series/test5.dcm", params=params)
 
 
@@ -61,7 +60,7 @@ def test_create_new_album_where_share_studies():
 def test_share_study_in_album():
     rq_album.add_user(env.env_var["USER_2_TOKEN"], env.env_var["ALBUM_ID_DEST"], env.env_var["USER_1_MAIL"])
     params = {"album": env.env_var["ALBUM_ID_SOURCE"]}
-    rq_studies.add_in_album(env.env_var["USER_1_TOKEN"], params, env.env_var["STUDY_UID4_1"], env.env_var["ALBUM_ID_DEST"])
+    rq_studies.add_in_album(env.env_var["USER_1_TOKEN"], params, env.env_var["STUDY_UID5"], env.env_var["ALBUM_ID_DEST"])
     rq_studies.get_list(token=env.env_var["USER_2_TOKEN"], params={"album": env.env_var["ALBUM_ID_DEST"]}, count=1)
 
 def test_delete_albums():
