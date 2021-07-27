@@ -100,8 +100,8 @@
       #image: osirixfoundation/kheops-authorization:dev
       #image: osirixfoundation/kheops-authorization:remove_JOOQ
       #image: osirixfoundation/kheops-authorization:upgrade_dependencies
-      #image: osirixfoundation/kheops-authorization:authorizationdev
-      image: osirixfoundation/kheops-authorization:demo
+      image: osirixfoundation/kheops-authorization:authorizationdev
+      #image: osirixfoundation/kheops-authorization:demo
       env_file: docker-compose.env
       environment:
         KHEOPS_OIDC_PROVIDER: http://keycloak:8080/auth/realms/kheops
@@ -139,7 +139,8 @@
     kheops-dicomweb-proxy:
       container_name: kheopsdicomwebproxy
       #image: osirixfoundation/kheops-dicomweb-proxy:v0.9.5
-      image: osirixfoundation/kheops-dicomweb-proxy:demo
+      #image: osirixfoundation/kheops-dicomweb-proxy:demo
+      image: osirixfoundation/kheops-dicomweb-proxy:authorizationdev
       env_file: docker-compose.env
       secrets:
         - kheops_auth_hmasecret_post
