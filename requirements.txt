@@ -17,7 +17,7 @@ numpy==1.16.4
 oauthlib==2.0.6
 packaging==19.0
 pbr==5.0.0
-pip==19.2
+pip==21.1
 pipenv==2018.11.26
 pluggy==0.6.0
 py==1.10.0
