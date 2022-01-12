@@ -18,7 +18,7 @@ oauthlib==2.0.6
 packaging==19.0
 pbr==5.0.0
 pip==19.2
-pipenv==2018.11.26
+pipenv==2022.1.8
 pluggy==0.6.0
 py==1.10.0
 pyasn1==0.4.8
